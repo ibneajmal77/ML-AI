@@ -51,7 +51,8 @@ These sections appear in this exact order in every lesson. Do not reorder. Do no
 7.  COMMON MISTAKES
 8.  RETRIEVAL PRACTICE
 9.  SUMMARY
-10. REFERENCE AND ADMIN
+10. FAST RECALL
+11. REFERENCE AND ADMIN
 ```
 
 ---
@@ -533,7 +534,77 @@ Work through these without re-reading. The effort of recall is the mechanism tha
 
 ---
 
-## SECTION 10: REFERENCE AND ADMIN
+## SECTION 10: FAST RECALL
+
+**Cognitive job:** Compress the full lesson into a revision-friendly memory board that can be scanned in under a minute.
+
+**Rules:**
+- This section appears after `SUMMARY` and before `REFERENCE AND ADMIN`
+- It is for fast revision, not for introducing new material
+- Keep it compact and high-signal
+- Use chunks, contrasts, triggers, and output-shapes so it matches how human memory reconstructs knowledge
+
+**Sub-sections (in order):**
+
+```markdown
+## FAST RECALL
+
+### What This Lesson Is Really About
+[One sentence that compresses the lesson into its deepest practical meaning.]
+
+### 30-Second Recall
+- [5 short bullets: whole lesson compressed]
+
+### Core Mental Model
+```text
+[tiny ASCII map]
+```
+
+### Must Know Cold
+- [3-6 bullets]
+
+### Code Patterns to Remember
+```python
+# canonical shapes only
+```
+
+### Decision Triggers
+- [if X, usually Y]
+
+### Output Shapes to Remember
+| Need | Typical output |
+|---|---|
+
+### Confusions to Avoid
+| Easy confusion | Correct distinction |
+|---|---|
+
+### Top Traps
+- [short warning bullets]
+
+### One Good Example to Keep
+[2-4 sentence memorable anchor example]
+
+### Revision Path
+1. [scan order]
+2. [scan order]
+3. [scan order]
+```
+
+**Design guidance:**
+- `What This Lesson Is Really About` should be the single sentence the learner could say if forced to summarize the entire lesson in one breath
+- `30-Second Recall` should let the learner reconstruct the lesson quickly
+- `Core Mental Model` should be smaller than the main summary diagram
+- `Code Patterns to Remember` should show API shapes, not full code
+- `Decision Triggers` should compress action rules
+- `Output Shapes to Remember` should anchor methods to what they return
+- `Confusions to Avoid` should list the most commonly mixed-up pairs
+- `Top Traps` should be emotionally sticky warning cues
+- `One Good Example to Keep` should be the single most memorable concrete case in the lesson
+
+---
+
+## SECTION 11: REFERENCE AND ADMIN
 
 **Cognitive job:** Support later reuse — this section is for scanning on return, not for first reading.
 
