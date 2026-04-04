@@ -10,6 +10,8 @@
 
 This template is built on six cognitive principles. Every section exists because of one of these — if a section does not serve a principle, it does not belong.
 
+There are currently seven principles listed below.
+
 | Principle | What it means for lesson design |
 |---|---|
 | **Meaning gates storage** | The brain files new information against existing schemas. Admin, references, and contracts placed before the concept have no schema to attach to — they slide off. Meta goes last. |
@@ -19,6 +21,7 @@ This template is built on six cognitive principles. Every section exists because
 | **Desirable difficulty encodes** | Forcing the learner to produce an answer before it is shown creates stronger memory than reading the answer directly. Small effort before revelation is a feature, not a burden. |
 | **Symmetry reduces cognitive load** | When every lesson has the same structure and every concept block has the same shape, the learner stops spending effort navigating and can spend it learning. |
 | **Mind-maps beat flat lists** | The brain remembers grouped families, contrasts, and output-shapes better than long undifferentiated inventories. Tables should cluster related methods into meaningful mental buckets. |
+| **Meaning first, map second** | Concept blocks should teach the idea first. Broad method landscapes and tool surfaces belong later in one consolidated map, not repeated inside every concept. |
 
 ---
 
@@ -52,7 +55,8 @@ These sections appear in this exact order in every lesson. Do not reorder. Do no
 8.  RETRIEVAL PRACTICE
 9.  SUMMARY
 10. FAST RECALL
-11. REFERENCE AND ADMIN
+11. PRACTICAL LANDSCAPE
+12. REFERENCE AND ADMIN
 ```
 
 ---
@@ -125,10 +129,9 @@ C. Mental model
 D. Desirable difficulty prompt
 E. First concrete artifact (code / scenario / contrast table)
 F. Three-column code annotation (if code was used)
-G. Technique / method map (when the concept has a practical method landscape)
-H. Faded practice prompt
-I. Real-world scenario (blockquote)
-J. Mini recall prompt
+G. Faded practice prompt
+H. Real-world scenario (blockquote)
+I. Mini recall prompt
 ```
 
 ---
@@ -243,86 +246,6 @@ Contrast (optional): "Unlike [confusable concept], this [key difference]."]
 
 ### G. Faded Practice Prompt
 
-### G. Technique / Method Map
-
-**Cognitive job:** Bridge the concept to the practical tool landscape without collapsing into an unstructured algorithm dump.
-
-**Why this section exists:**
-- Learners need to know not only what a paradigm or concept means, but also what concrete methods live under it.
-- Human memory works better when methods are grouped into families with clear contrasts and outputs.
-- This section should create a mental map: "if my problem looks like X, the methods in family Y are where I look first."
-
-**When required:**
-- Required whenever the concept includes a meaningful family of techniques, model types, strategies, or method categories
-- Optional only when the concept is too atomic to have sub-techniques
-
-**Rules:**
-- Group methods into **families**, not raw lists
-- Prefer 4-8 rows; if more are needed, split into separate family tables
-- Order rows from most common / most useful to less common / recognition-only
-- Each row must help answer one routing question: "what does this do, when do I use it, and what do I get back?"
-- Use familiar outputs as anchors: label, probability, cluster ID, embedding, anomaly score, reduced vector, policy
-- Do not turn this into a full library catalog; include only the methods that matter at this stage
-- If two methods are commonly confused, place them adjacent in the table
-
-**Memory-oriented design rules for these tables:**
-- Columns must support mind-mapping, not just completeness
-- Prefer this column order:
-
-```markdown
-| Technique / Family | What it does | When to use it | Typical tools | Typical output |
-|---|---|---|---|---|
-```
-
-- "Technique / Family" should use names the learner will hear in code reviews or docs
-- "What it does" should be short and concrete, not textbook language
-- "When to use it" should describe the decision trigger, not generic usefulness
-- "Typical output" is mandatory because outputs create strong memory anchors
-- Cluster related techniques together, for example:
-  - classification / regression / ranking
-  - clustering / dimensionality reduction / anomaly detection
-  - next-token / masked modeling / contrastive learning
-  - value-based / policy-based / actor-critic
-
-**Human-memory guidance:**
-- The learner should be able to reconstruct the family from memory after one pass
-- Good table shape:
-  - family name
-  - job
-  - trigger
-  - output
-- Bad table shape:
-  - long list of algorithms with tiny wording differences
-  - no output column
-  - no grouping by family
-  - rows ordered alphabetically instead of cognitively
-
-**Template:**
-
-```markdown
-### Technique / Method Map
-
-| Technique / Family | What it does | When to use it | Typical tools | Typical output |
-|---|---|---|---|---|
-| [family or method] | [short operational description] | [decision trigger] | [common library or class names] | [output shape] |
-```
-
-**Optional follow-up table when useful:**
-
-```markdown
-### When to Pick Which Technique
-
-| If your real need is... | Usually start with... | Not with... |
-|---|---|---|
-| [need] | [recommended family] | [common confusion] |
-```
-
-This second table is strongly encouraged for lessons introducing a broad method landscape.
-
----
-
-### H. Faded Practice Prompt
-
 **Cognitive job:** Force the learner to apply the concept with partial or no guidance before the next concept begins.
 
 **Rules:**
@@ -339,7 +262,7 @@ This second table is strongly encouraged for lessons introducing a broad method 
 
 ---
 
-### I. Real-World Scenario
+### H. Real-World Scenario
 
 **Cognitive job:** Ground the concept in a named domain with a real outcome.
 
@@ -356,7 +279,7 @@ This second table is strongly encouraged for lessons introducing a broad method 
 
 ---
 
-### J. Mini Recall Prompt
+### I. Mini Recall Prompt
 
 **Cognitive job:** Strengthen encoding of the concept just taught before moving to the next one.
 
@@ -539,7 +462,7 @@ Work through these without re-reading. The effort of recall is the mechanism tha
 **Cognitive job:** Compress the full lesson into a revision-friendly memory board that can be scanned in under a minute.
 
 **Rules:**
-- This section appears after `SUMMARY` and before `REFERENCE AND ADMIN`
+- This section appears after `SUMMARY` and before `PRACTICAL LANDSCAPE`
 - It is for fast revision, not for introducing new material
 - Keep it compact and high-signal
 - Use chunks, contrasts, triggers, and output-shapes so it matches how human memory reconstructs knowledge
@@ -604,7 +527,53 @@ Work through these without re-reading. The effort of recall is the mechanism tha
 
 ---
 
-## SECTION 11: REFERENCE AND ADMIN
+## SECTION 11: PRACTICAL LANDSCAPE
+
+**Cognitive job:** Give the learner one consolidated practical map of methods, choices, tools, and outputs after the concepts are already understood.
+
+**Rules:**
+- This section appears after `FAST RECALL` and before `REFERENCE AND ADMIN`
+- Use it to consolidate method families and coding surfaces in one place
+- Do not repeat these tables inside each concept block
+- Keep the tables grouped, compact, and easy to scan
+- Prefer grouped family maps over exhaustive algorithm lists
+
+**Sub-sections (in order):**
+
+```markdown
+## PRACTICAL LANDSCAPE
+
+### Technique Landscape
+
+| [concept family] | [main technique families] | [what they are for] |
+|---|---|---|
+
+### When to Use What
+
+| If your real need is... | Usually start with... | Not with... |
+|---|---|---|
+
+### Coding Surface
+
+| [concept family] | [common libraries / tools] | [canonical API shape] | [typical output] |
+|---|---|---|---|
+
+### Output Shapes to Remember
+
+| Need | Typical output |
+|---|---|
+```
+
+**Design guidance:**
+- `Technique Landscape` should show the family-level map, not detailed tutorials
+- `When to Use What` should compress routing decisions into memorable triggers
+- `Coding Surface` should show only the canonical API shapes learners are most likely to touch
+- `Output Shapes to Remember` should anchor methods to what they return, because outputs are strong memory hooks
+- If a lesson has very little method surface, this section can be brief, but it should still exist
+
+---
+
+## SECTION 12: REFERENCE AND ADMIN
 
 **Cognitive job:** Support later reuse — this section is for scanning on return, not for first reading.
 
@@ -615,7 +584,7 @@ Work through these without re-reading. The effort of recall is the mechanism tha
 
 ### Sub-sections (in order):
 
-**10.1 Quick Reference table**
+**12.1 Quick Reference table**
 
 ```markdown
 ### Quick Reference
@@ -630,7 +599,7 @@ Memorize key: 🧠 = hold in working memory, 📖 = look up when needed, 🧠 pa
 
 ---
 
-**10.2 Signal Hierarchy**
+**12.2 Signal Hierarchy**
 
 ```markdown
 ### Signal Hierarchy — What to Know at What Depth
@@ -650,7 +619,7 @@ Memorize key: 🧠 = hold in working memory, 📖 = look up when needed, 🧠 pa
 
 ---
 
-**10.3 Vocabulary Engineers Use**
+**12.3 Vocabulary Engineers Use**
 
 ```markdown
 ### Vocabulary Engineers Use — Senior Signal
@@ -666,7 +635,7 @@ Memorize key: 🧠 = hold in working memory, 📖 = look up when needed, 🧠 pa
 
 ---
 
-**10.4 Job Market Signal**
+**12.4 Job Market Signal**
 
 ```markdown
 ### Job Market Signal
@@ -687,7 +656,7 @@ Q: "[Interview question]"
 
 ---
 
-**10.5 Interview Q&A**
+**12.5 Interview Q&A**
 
 ```markdown
 ### Interview Q&A
@@ -716,7 +685,7 @@ Rules for senior answers:
 
 ---
 
-**10.6 Forward Links**
+**12.6 Forward Links**
 
 ```markdown
 ### Forward Links — Where You Will Use This
@@ -728,7 +697,7 @@ Rules for senior answers:
 
 ---
 
-**10.7 Lesson Contract**
+**12.7 Lesson Contract**
 
 ```markdown
 ### Lesson Contract
