@@ -1,0 +1,105 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+wheels/
+pip-wheel-metadata/
+.installed.cfg
+lib/
+lib64/
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# Jupyter Lab
+.jupyter/
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Environment variables / secrets
+.env
+.env.*
+*.env
+secrets.json
+config.local.*
+
+# Models & large files
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.pt
+*.pth
+*.onnx
+*.safetensors
+*.bin
+*.gguf
+*.ggml
+
+# Datasets
+data/raw/
+data/processed/
+*.csv
+*.tsv
+*.parquet
+*.arrow
+*.jsonl
+
+# ML experiment tracking
+mlruns/
+.mlflow/
+wandb/
+lightning_logs/
+runs/
+outputs/
+checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node (if any JS tooling)
+node_modules/
+npm-debug.log*
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
