@@ -7,15 +7,19 @@ from typing import Any
 import joblib
 import numpy as np
 import pandas as pd
+from sklearn.base import clone
+from sklearn.calibration import CalibratedClassifierCV
 from sklearn.calibration import calibration_curve
 from sklearn.cluster import KMeans
 from sklearn.compose import ColumnTransformer
 from sklearn.decomposition import PCA
+from sklearn.decomposition import TruncatedSVD
 from sklearn.ensemble import GradientBoostingClassifier, IsolationForest, RandomForestClassifier, RandomForestRegressor
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression, Ridge
 from sklearn.metrics import (
     average_precision_score,
+    accuracy_score,
     brier_score_loss,
     f1_score,
     mean_absolute_error,
@@ -28,6 +32,9 @@ from sklearn.metrics import (
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
+from p1_customer_health.ml.audit import write_data_quality_report
+from p1_customer_health.ml.business_framing import write_business_decision_workflow
+from p1_customer_health.ml.failure_taxonomy import write_failure_taxonomy
 from p1_customer_health.ml.features import (
     CATEGORICAL_FEATURES,
     CLASSIFICATION_TARGET,
@@ -37,6 +44,11 @@ from p1_customer_health.ml.features import (
     load_dataset,
     time_split,
 )
+from p1_customer_health.ml.leakage import write_leakage_report
+from p1_customer_health.ml.llm_benchmark import run_llm_vs_classical_benchmark
+from p1_customer_health.ml.onnx_export import export_classifier_to_onnx
+from p1_customer_health.ml.onnx_export import export_dense_classifier_to_onnx
+from p1_customer_health.ml.rl import run_contextual_bandit
 
 
 def _ensure_dir(path: Path) -> None:
@@ -69,6 +81,7 @@ def _dense_tabular_preprocessor() -> ColumnTransformer:
 def _classification_metrics(y_true: pd.Series, scores: np.ndarray, threshold: float) -> dict[str, float]:
     preds = (scores >= threshold).astype(int)
     return {
+        "accuracy": round(float(accuracy_score(y_true, preds)), 4),
         "precision": round(float(precision_score(y_true, preds, zero_division=0)), 4),
         "recall": round(float(recall_score(y_true, preds, zero_division=0)), 4),
         "f1": round(float(f1_score(y_true, preds, zero_division=0)), 4),
@@ -76,6 +89,33 @@ def _classification_metrics(y_true: pd.Series, scores: np.ndarray, threshold: fl
         "roc_auc": round(float(roc_auc_score(y_true, scores)), 4),
         "brier": round(float(brier_score_loss(y_true, scores)), 4),
     }
+
+
+def _random_resample(train_df: pd.DataFrame, target_column: str, strategy: str) -> pd.DataFrame:
+    if strategy not in {"oversample", "undersample"}:
+        raise ValueError(f"unsupported strategy: {strategy}")
+    counts = train_df[target_column].value_counts()
+    minority_class = counts.idxmin()
+    majority_class = counts.idxmax()
+    minority_df = train_df[train_df[target_column] == minority_class]
+    majority_df = train_df[train_df[target_column] == majority_class]
+    if strategy == "oversample":
+        sampled_minority = minority_df.sample(len(majority_df), replace=True, random_state=42)
+        return pd.concat([majority_df, sampled_minority], axis=0).sample(frac=1.0, random_state=42).reset_index(drop=True)
+    sampled_majority = majority_df.sample(len(minority_df), random_state=42)
+    return pd.concat([sampled_majority, minority_df], axis=0).sample(frac=1.0, random_state=42).reset_index(drop=True)
+
+
+def _fit_diagnosis_report(leaderboard: list[dict[str, Any]], output_dir: Path) -> None:
+    rows = []
+    for row in leaderboard:
+        gap = round(float(row.get("train_pr_auc", row.get("train_mae", 0)) - row.get("val_pr_auc", row.get("val_mae", 0))), 4)
+        if "train_pr_auc" in row:
+            status = "likely_overfitting" if gap > 0.08 else "stable_or_underfit"
+        else:
+            status = "likely_overfitting" if gap < -25 else "stable_or_underfit"
+        rows.append({"model": row["model"], "gap": gap, "diagnosis": status})
+    pd.DataFrame(rows).to_csv(output_dir / "fit_diagnosis.csv", index=False)
 
 
 def _best_threshold(y_true: pd.Series, scores: np.ndarray, false_positive_cost: float = 1.0, false_negative_cost: float = 8.0) -> float:
@@ -136,7 +176,10 @@ def train_classifier(df: pd.DataFrame, artifact_root: Path) -> None:
     y_val = val_df[CLASSIFICATION_TARGET]
     y_test = test_df[CLASSIFICATION_TARGET]
 
-    models: dict[str, Pipeline] = {
+    resampled_train = _random_resample(train_df, CLASSIFICATION_TARGET, "oversample")
+    undersampled_train = _random_resample(train_df, CLASSIFICATION_TARGET, "undersample")
+
+    models: dict[str, tuple[Pipeline, pd.DataFrame]] = {
         "logistic_mixed": Pipeline(
             [
                 ("preprocess", _mixed_preprocessor()),
@@ -155,6 +198,25 @@ def train_classifier(df: pd.DataFrame, artifact_root: Path) -> None:
                 ("model", GradientBoostingClassifier(random_state=42)),
             ]
         ),
+        "logistic_oversampled": Pipeline(
+            [
+                ("preprocess", _mixed_preprocessor()),
+                ("model", LogisticRegression(max_iter=1000)),
+            ]
+        ),
+        "logistic_undersampled": Pipeline(
+            [
+                ("preprocess", _mixed_preprocessor()),
+                ("model", LogisticRegression(max_iter=1000)),
+            ]
+        ),
+    }
+    training_frames = {
+        "logistic_mixed": train_df,
+        "random_forest_tabular": train_df,
+        "gradient_boosting_tabular": train_df,
+        "logistic_oversampled": resampled_train,
+        "logistic_undersampled": undersampled_train,
     }
 
     leaderboard: list[dict[str, Any]] = []
@@ -164,7 +226,9 @@ def train_classifier(df: pd.DataFrame, artifact_root: Path) -> None:
     best_score = -1.0
 
     for name, pipeline in models.items():
-        pipeline.fit(train_df, y_train)
+        model_train_df = training_frames[name]
+        model_y_train = model_train_df[CLASSIFICATION_TARGET]
+        pipeline.fit(model_train_df, model_y_train)
         train_scores = pipeline.predict_proba(train_df)[:, 1]
         val_scores = pipeline.predict_proba(val_df)[:, 1]
         threshold = _best_threshold(y_val, val_scores)
@@ -190,23 +254,35 @@ def train_classifier(df: pd.DataFrame, artifact_root: Path) -> None:
 
     assert best_pipeline is not None
 
+    calibrated_pipeline = CalibratedClassifierCV(clone(best_pipeline), method="sigmoid", cv=3)
+    calibrated_pipeline.fit(train_df, y_train)
+    calibrated_scores = calibrated_pipeline.predict_proba(test_df)[:, 1]
+    calibrated_threshold = _best_threshold(y_test, calibrated_scores)
+
     test_scores = best_pipeline.predict_proba(test_df)[:, 1]
     test_metrics = _classification_metrics(y_test, test_scores, best_threshold)
+    calibrated_metrics = _classification_metrics(y_test, calibrated_scores, calibrated_threshold)
 
     calibration_df = _calibration_report(y_test, test_scores)
     calibration_df.to_csv(output_dir / "calibration_bins.csv", index=False)
+    _calibration_report(y_test, calibrated_scores).to_csv(output_dir / "calibrated_calibration_bins.csv", index=False)
 
     slice_df = _classification_slice_report(test_df, y_test, test_scores, best_threshold)
     slice_df.to_csv(output_dir / "slice_analysis.csv", index=False)
+    write_failure_taxonomy(test_df, test_scores, best_threshold, output_dir)
+    _fit_diagnosis_report(leaderboard, output_dir)
 
     metrics = {
         "selected_model": best_name,
         "selected_threshold": best_threshold,
+        "selected_calibrated_threshold": calibrated_threshold,
         "leaderboard": leaderboard,
         "test_metrics": test_metrics,
+        "calibrated_test_metrics": calibrated_metrics,
     }
     _write_json(output_dir / "metrics.json", metrics)
     joblib.dump({"model": best_pipeline, "threshold": best_threshold, "task": "classification"}, output_dir / "model.joblib")
+    joblib.dump({"model": calibrated_pipeline, "threshold": calibrated_threshold, "task": "classification_calibrated"}, output_dir / "calibrated_model.joblib")
 
 
 def train_regressor(df: pd.DataFrame, artifact_root: Path) -> None:
@@ -270,6 +346,7 @@ def train_regressor(df: pd.DataFrame, artifact_root: Path) -> None:
         },
     }
     _write_json(output_dir / "metrics.json", metrics)
+    _fit_diagnosis_report(leaderboard, output_dir)
     joblib.dump({"model": best_pipeline, "task": "regression"}, output_dir / "model.joblib")
 
 
@@ -318,15 +395,57 @@ def run_optional_self_supervised(df: pd.DataFrame, artifact_root: Path) -> None:
         )
         return
 
+    try:
+        split = time_split(df)
+        encoder = SentenceTransformer("all-MiniLM-L6-v2")
+        train_embeddings = encoder.encode(split.train[TEXT_FEATURE].tolist())
+        test_embeddings = encoder.encode(split.test[TEXT_FEATURE].tolist())
+        model = LogisticRegression(max_iter=1000, class_weight="balanced")
+        model.fit(train_embeddings, split.train[CLASSIFICATION_TARGET])
+        scores = model.predict_proba(test_embeddings)[:, 1]
+        metrics = _classification_metrics(split.test[CLASSIFICATION_TARGET], scores, threshold=0.5)
+        _write_json(output_dir / "status.json", {"status": "completed", "test_metrics": metrics})
+    except Exception:
+        split = time_split(df)
+        vectorizer = TfidfVectorizer(max_features=600, ngram_range=(1, 2))
+        train_sparse = vectorizer.fit_transform(split.train[TEXT_FEATURE])
+        test_sparse = vectorizer.transform(split.test[TEXT_FEATURE])
+        reducer = TruncatedSVD(n_components=32, random_state=42)
+        train_embeddings = reducer.fit_transform(train_sparse)
+        test_embeddings = reducer.transform(test_sparse)
+        model = LogisticRegression(max_iter=1000, class_weight="balanced")
+        model.fit(train_embeddings, split.train[CLASSIFICATION_TARGET])
+        scores = model.predict_proba(test_embeddings)[:, 1]
+        metrics = _classification_metrics(split.test[CLASSIFICATION_TARGET], scores, threshold=0.5)
+        _write_json(
+            output_dir / "status.json",
+            {
+                "status": "completed",
+                "method": "local_dense_text_embedding_fallback",
+                "test_metrics": metrics,
+            },
+        )
+
+
+def export_verified_onnx_path(df: pd.DataFrame, artifact_root: Path) -> None:
+    output_dir = artifact_root / "onnx"
+    _ensure_dir(output_dir)
     split = time_split(df)
-    encoder = SentenceTransformer("all-MiniLM-L6-v2")
-    train_embeddings = encoder.encode(split.train[TEXT_FEATURE].tolist())
-    test_embeddings = encoder.encode(split.test[TEXT_FEATURE].tolist())
-    model = LogisticRegression(max_iter=1000, class_weight="balanced")
-    model.fit(train_embeddings, split.train[CLASSIFICATION_TARGET])
-    scores = model.predict_proba(test_embeddings)[:, 1]
-    metrics = _classification_metrics(split.test[CLASSIFICATION_TARGET], scores, threshold=0.5)
-    _write_json(output_dir / "status.json", {"status": "completed", "test_metrics": metrics})
+    train_df = split.train
+    test_df = split.test
+    x_train = train_df[NUMERIC_FEATURES].to_numpy(dtype=np.float32)
+    x_test = test_df[NUMERIC_FEATURES].to_numpy(dtype=np.float32)
+    y_train = train_df[CLASSIFICATION_TARGET]
+
+    dense_model = Pipeline(
+        [
+            ("scaler", StandardScaler()),
+            ("model", LogisticRegression(max_iter=1000, class_weight="balanced")),
+        ]
+    )
+    dense_model.fit(x_train, y_train)
+    joblib.dump({"model": dense_model, "task": "onnx_dense_classifier"}, output_dir / "dense_model.joblib")
+    export_dense_classifier_to_onnx(dense_model, x_test, output_dir)
 
 
 def run_optional_boosting(df: pd.DataFrame, artifact_root: Path) -> None:
@@ -405,8 +524,17 @@ def run_optional_boosting(df: pd.DataFrame, artifact_root: Path) -> None:
 def train_all(dataset_path: Path, artifact_root: Path) -> None:
     df = load_dataset(dataset_path)
     _ensure_dir(artifact_root)
+    write_business_decision_workflow(artifact_root / "business")
+    write_data_quality_report(df, artifact_root / "data_quality")
+    split = time_split(df)
+    write_leakage_report(split.train, split.validation, split.test, artifact_root / "leakage")
     train_classifier(df, artifact_root)
     train_regressor(df, artifact_root)
     train_unsupervised(df, artifact_root)
     run_optional_self_supervised(df, artifact_root)
     run_optional_boosting(df, artifact_root)
+    run_llm_vs_classical_benchmark(df, artifact_root / "llm_benchmark")
+    run_contextual_bandit(df, artifact_root / "reinforcement_learning")
+    classifier_bundle = joblib.load(artifact_root / "classification" / "model.joblib")
+    export_classifier_to_onnx(classifier_bundle, split.test.head(5), artifact_root / "onnx")
+    export_verified_onnx_path(df, artifact_root)

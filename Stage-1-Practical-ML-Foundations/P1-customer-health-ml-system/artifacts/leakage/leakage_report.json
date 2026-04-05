@@ -1,0 +1,11 @@
+{
+  "chronology_ok": true,
+  "forbidden_columns_present": [],
+  "target_columns_in_feature_space": [],
+  "split_summary": {
+    "train_max_date": "2025-06-17",
+    "validation_min_date": "2025-06-17",
+    "validation_max_date": "2025-07-24",
+    "test_min_date": "2025-07-24"
+  }
+}

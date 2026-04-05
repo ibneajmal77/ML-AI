@@ -1,0 +1,26 @@
+{
+  "policy": {
+    "high_risk": "offer_discount",
+    "medium_risk": "send_email",
+    "healthy": "do_nothing"
+  },
+  "q_values": {
+    "high_risk": {
+      "do_nothing": -3.069606865535602,
+      "send_email": 0.7904092523089595,
+      "offer_discount": 1.3965018947318915
+    },
+    "medium_risk": {
+      "do_nothing": 0.30261510517685036,
+      "send_email": 0.6991142067916147,
+      "offer_discount": 0.20745395382214277
+    },
+    "healthy": {
+      "do_nothing": 0.9013684377507813,
+      "send_email": 0.16522024406310126,
+      "offer_discount": -0.7597900255352237
+    }
+  },
+  "average_reward": 0.6748,
+  "episodes": 2000
+}

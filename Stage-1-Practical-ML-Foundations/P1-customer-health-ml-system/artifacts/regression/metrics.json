@@ -1,0 +1,24 @@
+{
+  "selected_model": "ridge_mixed",
+  "leaderboard": [
+    {
+      "model": "ridge_mixed",
+      "train_mae": 177.5573,
+      "val_mae": 178.7494,
+      "val_rmse": 244.3835,
+      "val_r2": 0.2026
+    },
+    {
+      "model": "random_forest_regressor",
+      "train_mae": 69.6278,
+      "val_mae": 186.7293,
+      "val_rmse": 252.565,
+      "val_r2": 0.1483
+    }
+  ],
+  "test_metrics": {
+    "mae": 187.2493,
+    "rmse": 258.9613,
+    "r2": 0.1831
+  }
+}

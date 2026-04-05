@@ -1,0 +1,12 @@
+{
+  "status": "completed",
+  "onnx_path": "artifacts\\onnx\\dense_classifier.onnx",
+  "runtime_output_shapes": [
+    [
+      5
+    ],
+    [
+      5
+    ]
+  ]
+}

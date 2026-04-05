@@ -1,0 +1,82 @@
+{
+  "row_count": 5000,
+  "duplicate_account_snapshot_rows": 0,
+  "missing_by_column": {
+    "account_id": 0,
+    "snapshot_date": 0,
+    "plan_type": 0,
+    "industry": 0,
+    "region": 1280,
+    "contract_type": 0,
+    "monthly_spend": 0,
+    "logins_30d": 0,
+    "tickets_30d": 0,
+    "feature_adoption_ratio": 0,
+    "days_since_last_activity": 0,
+    "account_age_days": 0,
+    "nps_score": 0,
+    "payment_failures_90d": 0,
+    "seat_utilization": 0,
+    "support_note": 0,
+    "churned_30d": 0,
+    "revenue_change_next_30d": 0
+  },
+  "classification_positive_rate": 0.1796,
+  "regression_summary": {
+    "mean": -86.8975,
+    "std": 276.163
+  },
+  "numeric_ranges": {
+    "monthly_spend": {
+      "min": 50.0,
+      "max": 2488.51,
+      "mean": 674.9006
+    },
+    "logins_30d": {
+      "min": 0.0,
+      "max": 47.0,
+      "mean": 17.9486
+    },
+    "tickets_30d": {
+      "min": 0.0,
+      "max": 10.0,
+      "mean": 2.4128
+    },
+    "feature_adoption_ratio": {
+      "min": 0.02,
+      "max": 0.99,
+      "mean": 0.5761
+    },
+    "days_since_last_activity": {
+      "min": 0.0,
+      "max": 47.0,
+      "mean": 12.439
+    },
+    "account_age_days": {
+      "min": 30.0,
+      "max": 1799.0,
+      "mean": 921.6502
+    },
+    "nps_score": {
+      "min": -85.0,
+      "max": 100.0,
+      "mean": 23.8754
+    },
+    "payment_failures_90d": {
+      "min": 0.0,
+      "max": 4.0,
+      "mean": 0.4064
+    },
+    "seat_utilization": {
+      "min": 0.05,
+      "max": 1.2,
+      "mean": 0.6798
+    }
+  },
+  "categorical_cardinality": {
+    "plan_type": 3,
+    "industry": 5,
+    "region": 3,
+    "contract_type": 2
+  }
+}
