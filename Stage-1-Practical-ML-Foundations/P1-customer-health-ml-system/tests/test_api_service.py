@@ -2,9 +2,9 @@ from pathlib import Path
 
 import joblib
 
-from p1_customer_health.api.service import PredictionService
-from p1_customer_health.ml.data_generation import generate_customer_health_data
-from p1_customer_health.ml.train import train_all
+from p1_customer_health.domain.synthetic_data import generate_customer_health_data
+from p1_customer_health.serving.prediction_service import PredictionService
+from p1_customer_health.training.orchestration import train_all
 
 
 def test_prediction_service_smoke(tmp_path: Path) -> None:

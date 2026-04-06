@@ -1,12 +1,13 @@
 {
   "status": "completed",
+  "method": "local_dense_text_embedding_fallback",
   "test_metrics": {
-    "accuracy": 0.5307,
-    "precision": 0.2102,
-    "recall": 0.5,
-    "f1": 0.296,
-    "pr_auc": 0.2525,
-    "roc_auc": 0.5338,
-    "brier": 0.2485
+    "accuracy": 0.5267,
+    "precision": 0.2034,
+    "recall": 0.4797,
+    "f1": 0.2857,
+    "pr_auc": 0.2017,
+    "roc_auc": 0.4763,
+    "brier": 0.2511
   }
 }

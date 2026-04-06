@@ -1,107 +1,83 @@
 # P1 Customer Health ML System
 
-This is the Stage 1 capstone project for practical ML foundations. It is one bounded business system designed to cover the full Stage 1 surface with working code, not disconnected demos.
+This is the Stage 1 capstone for practical ML foundations. It is structured as a small production-style ML system, not a notebook dump and not a fake web app with many empty endpoints.
 
-The project simulates a SaaS customer-health workflow and implements:
+The business setting is a SaaS customer-health workflow. One dataset family supports multiple realistic ML tasks:
 
 - churn classification
 - revenue-change regression
-- customer segmentation with clustering
+- customer segmentation
 - anomaly detection
-- optional self-supervised text-embedding baseline
-- evaluation, threshold tuning, calibration reporting, and slice analysis
-- business framing, data-quality auditing, leakage checks, and failure taxonomy
-- model packaging with `joblib`
-- ONNX export path
-- contextual-bandit RL simulation for retention actions
-- classical-vs-LLM-style text benchmark
-- a small FastAPI inference service
+- text-only self-supervised benchmark
+- boosting benchmark with XGBoost and LightGBM
+- classical-ML-vs-LLM-style comparison
+- contextual-bandit retention simulation
+- packaging and API serving
 
-## Why this project fits Stage 1
+## Production Architecture
 
-One domain covers nearly all Stage 1 topics naturally:
-
-- structured features: spend, logins, tickets, tenure, usage
-- categorical features: plan, region, industry, contract type
-- time-derived features: snapshot date, days since last activity
-- text basics: support notes
-- supervised learning: churn and revenue prediction
-- unsupervised learning: segmentation and anomaly detection
-- self-supervised learning: optional sentence-embedding workflow
-- production basics: pipeline, packaging, and serving
-
-## Repo shape
+The repository is organized around the actual system flow:
 
 ```text
 P1-customer-health-ml-system/
-├── data/
-│   ├── raw/
-│   └── processed/
-├── artifacts/
-│   ├── classification/
-│   ├── regression/
-│   ├── unsupervised/
-│   └── self_supervised/
-├── docs/
-├── scripts/
-├── src/p1_customer_health/
-│   ├── api/
-│   └── ml/
-└── tests/
+|-- data/
+|-- artifacts/
+|-- docs/
+|-- scripts/
+|-- src/p1_customer_health/
+|   |-- api/              # FastAPI routes and request/response schemas
+|   |-- app/              # runtime settings
+|   |-- domain/           # dataset contract and synthetic data generation
+|   |-- training/         # offline model building and shared training utilities
+|   |-- analysis/         # audits, leakage checks, failure taxonomy, business framing
+|   |-- experiments/      # bounded advanced tracks: boosting, RL, LLM, ONNX, embeddings
+|   |-- serving/          # inference-time artifact loading and prediction orchestration
+|   `-- ml/               # thin compatibility wrappers only
+`-- tests/
 ```
 
-## Local run
+## How To Think About The System
 
-```bash
-uv sync --dev
-uv run python scripts/generate_data.py
-uv run python scripts/train_models.py
-uv run uvicorn p1_customer_health.api.main:app --reload
+There are two different flows:
+
+1. Offline flow
+   - generate or load data
+   - validate dataset and split by time
+   - train models
+   - run diagnostics and reports
+   - save artifacts
+2. Online flow
+   - receive API request
+   - validate request schema
+   - load saved artifacts
+   - run inference
+   - return combined prediction response
+
+That split is the core architecture. The project is mainly an offline ML system with a small serving layer on top.
+
+## Entry Points
+
+- [generate_data.py](C:/Users/ibnea/source/ML-AI/Stage-1-Practical-ML-Foundations/P1-customer-health-ml-system/scripts/generate_data.py)
+- [train_models.py](C:/Users/ibnea/source/ML-AI/Stage-1-Practical-ML-Foundations/P1-customer-health-ml-system/scripts/train_models.py)
+- [run_api.py](C:/Users/ibnea/source/ML-AI/Stage-1-Practical-ML-Foundations/P1-customer-health-ml-system/scripts/run_api.py)
+
+## Local Run
+
+```powershell
+python scripts\generate_data.py
+python scripts\train_models.py
+pytest -q
+python scripts\run_api.py
 ```
 
-## Main outputs
+Swagger:
 
-- `artifacts/classification/model.joblib`
-- `artifacts/classification/metrics.json`
-- `artifacts/classification/slice_analysis.csv`
-- `artifacts/classification/calibration_bins.csv`
-- `artifacts/classification/calibrated_model.joblib`
-- `artifacts/classification/failure_taxonomy_summary.csv`
-- `artifacts/classification/fit_diagnosis.csv`
-- `artifacts/regression/model.joblib`
-- `artifacts/regression/metrics.json`
-- `artifacts/regression/fit_diagnosis.csv`
-- `artifacts/unsupervised/segmenter.joblib`
-- `artifacts/unsupervised/anomaly_detector.joblib`
-- `artifacts/self_supervised/status.json`
-- `artifacts/boosting/status.json`
-- `artifacts/business/business_decisions.json`
-- `artifacts/data_quality/data_quality_report.json`
-- `artifacts/leakage/leakage_report.json`
-- `artifacts/llm_benchmark/llm_vs_classical_benchmark.json`
-- `artifacts/reinforcement_learning/contextual_bandit_report.json`
-- `artifacts/onnx/status.json`
+- `http://127.0.0.1:8000/docs`
 
-## Core API endpoints
+## Best Docs To Read First
 
-- `GET /health`
-- `POST /v1/predict/customer-health`
-
-## What the project teaches
-
-- how to define features, labels, and time-safe splits
-- how to code the rules-vs-ML business decision explicitly
-- how to compare regression and classification models honestly
-- how thresholds and calibration change business decisions
-- how resampling, class weights, and calibration differ in implementation
-- how imbalance changes metric choice and operating policy
-- how feature engineering and sklearn pipelines fit together
-- how to run slice analysis, failure taxonomy, and fit diagnosis
-- how to audit data quality and detect leakage risks
-- how an RL-style retention policy can be simulated without replacing the main predictive workflow
-- how to compare classical text ML against an LLM-style baseline
-- how to package and serve a fitted artifact
-
-## Stage 1 lesson coverage
-
-See [docs/coverage-map.md](C:/Users/ibnea/source/ML-AI/Stage-1-Practical-ML-Foundations/P1-customer-health-ml-system/docs/coverage-map.md) for the full lesson-to-project mapping.
+1. [architecture.md](C:/Users/ibnea/source/ML-AI/Stage-1-Practical-ML-Foundations/P1-customer-health-ml-system/docs/architecture.md)
+2. [production-architecture-flow.md](C:/Users/ibnea/source/ML-AI/Stage-1-Practical-ML-Foundations/P1-customer-health-ml-system/docs/production-architecture-flow.md)
+3. [structure-guide.md](C:/Users/ibnea/source/ML-AI/Stage-1-Practical-ML-Foundations/P1-customer-health-ml-system/docs/structure-guide.md)
+4. [learning-flow.md](C:/Users/ibnea/source/ML-AI/Stage-1-Practical-ML-Foundations/P1-customer-health-ml-system/docs/learning-flow.md)
+5. [stage1-implementation-map.md](C:/Users/ibnea/source/ML-AI/Stage-1-Practical-ML-Foundations/P1-customer-health-ml-system/docs/stage1-implementation-map.md)

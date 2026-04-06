@@ -5,8 +5,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from p1_customer_health.api.schemas import PredictRequest, PredictResponse
-from p1_customer_health.api.service import PredictionService
-from p1_customer_health.config import get_settings
+from p1_customer_health.app.settings import get_settings
+from p1_customer_health.serving.prediction_service import PredictionService
 
 
 @asynccontextmanager

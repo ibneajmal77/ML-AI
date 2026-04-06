@@ -6,7 +6,7 @@ from typing import Any
 
 import pandas as pd
 
-from p1_customer_health.ml.features import CATEGORICAL_FEATURES, CLASSIFICATION_TARGET, NUMERIC_FEATURES, REGRESSION_TARGET, TIMESTAMP_COLUMN
+from p1_customer_health.domain.dataset import CATEGORICAL_FEATURES, CLASSIFICATION_TARGET, NUMERIC_FEATURES, REGRESSION_TARGET, TIMESTAMP_COLUMN
 
 
 def write_data_quality_report(df: pd.DataFrame, output_dir: Path) -> None:

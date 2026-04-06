@@ -1,0 +1,11 @@
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.env
+run-api.err.log
+run-api.out.log
+uvicorn-start.log

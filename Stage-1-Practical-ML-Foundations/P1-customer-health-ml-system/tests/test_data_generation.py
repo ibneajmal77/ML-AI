@@ -1,4 +1,4 @@
-from p1_customer_health.ml.data_generation import generate_customer_health_data
+from p1_customer_health.domain.synthetic_data import generate_customer_health_data
 
 
 def test_generate_customer_health_data_has_expected_columns() -> None:

@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from p1_customer_health.ml.features import CLASSIFICATION_TARGET, REGRESSION_TARGET, TIMESTAMP_COLUMN
+from p1_customer_health.domain.dataset import CLASSIFICATION_TARGET, REGRESSION_TARGET, TIMESTAMP_COLUMN
 
 
 FORBIDDEN_COLUMNS = [

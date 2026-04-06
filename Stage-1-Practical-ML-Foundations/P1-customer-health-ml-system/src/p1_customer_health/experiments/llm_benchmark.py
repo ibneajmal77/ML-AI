@@ -9,7 +9,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, average_precision_score, f1_score, precision_score, recall_score
 from sklearn.pipeline import Pipeline
 
-from p1_customer_health.ml.features import CLASSIFICATION_TARGET, TEXT_FEATURE, time_split
+from p1_customer_health.domain.dataset import CLASSIFICATION_TARGET, TEXT_FEATURE, time_split
 
 
 RISK_KEYWORDS = ["complaint", "frustration", "blocker", "low usage"]

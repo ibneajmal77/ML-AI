@@ -6,7 +6,7 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from p1_customer_health.ml.data_generation import generate_customer_health_data
+from p1_customer_health.domain.synthetic_data import generate_customer_health_data
 
 
 def main() -> None:
