@@ -1,4 +1,4 @@
 {
   "status": "skipped",
-  "reason": "onnx export failed: NotImplementedError"
+  "reason": "skl2onnx and/or onnxruntime not installed"
 }

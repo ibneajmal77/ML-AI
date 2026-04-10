@@ -5,6 +5,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from p1_customer_health.utils import ensure_dir
+
 
 def _bucket_failure(row: pd.Series) -> str:
     if row["error_type"] == "false_negative":
@@ -25,7 +27,7 @@ def _bucket_failure(row: pd.Series) -> str:
 
 
 def write_failure_taxonomy(df: pd.DataFrame, scores: np.ndarray, threshold: float, output_dir: Path) -> None:
-    output_dir.mkdir(parents=True, exist_ok=True)
+    ensure_dir(output_dir)
     preds = (scores >= threshold).astype(int)
     result = df.copy()
     result["predicted_label"] = preds

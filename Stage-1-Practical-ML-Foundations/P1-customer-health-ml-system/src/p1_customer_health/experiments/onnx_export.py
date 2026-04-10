@@ -1,22 +1,20 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
+from p1_customer_health.utils import ensure_dir, write_json
+
 
 def export_classifier_to_onnx(bundle: dict, sample_df: pd.DataFrame, output_dir: Path) -> None:
-    output_dir.mkdir(parents=True, exist_ok=True)
+    ensure_dir(output_dir)
     try:
         from skl2onnx import to_onnx
         import onnxruntime as ort
     except ImportError:
-        (output_dir / "status.json").write_text(
-            json.dumps({"status": "skipped", "reason": "skl2onnx and/or onnxruntime not installed"}, indent=2),
-            encoding="utf-8",
-        )
+        write_json(output_dir / "status.json", {"status": "skipped", "reason": "skl2onnx and/or onnxruntime not installed"})
         return
 
     try:
@@ -28,34 +26,22 @@ def export_classifier_to_onnx(bundle: dict, sample_df: pd.DataFrame, output_dir:
         session = ort.InferenceSession(onnx_path.as_posix(), providers=["CPUExecutionProvider"])
         input_name = session.get_inputs()[0].name
         runtime_outputs = session.run(None, {input_name: sample_df.to_dict(orient="list")})
-        (output_dir / "status.json").write_text(
-            json.dumps(
-                {
-                    "status": "completed",
-                    "onnx_path": str(onnx_path),
-                    "runtime_output_shapes": [list(np.array(output).shape) for output in runtime_outputs],
-                },
-                indent=2,
-            ),
-            encoding="utf-8",
-        )
+        write_json(output_dir / "status.json", {
+            "status": "completed",
+            "onnx_path": str(onnx_path),
+            "runtime_output_shapes": [list(np.array(output).shape) for output in runtime_outputs],
+        })
     except Exception as exc:
-        (output_dir / "status.json").write_text(
-            json.dumps({"status": "skipped", "reason": f"onnx export failed: {type(exc).__name__}"}, indent=2),
-            encoding="utf-8",
-        )
+        write_json(output_dir / "status.json", {"status": "skipped", "reason": f"onnx export failed: {type(exc).__name__}"})
 
 
 def export_dense_classifier_to_onnx(model, sample_array: np.ndarray, output_dir: Path) -> None:
-    output_dir.mkdir(parents=True, exist_ok=True)
+    ensure_dir(output_dir)
     try:
         from skl2onnx import to_onnx
         import onnxruntime as ort
     except ImportError:
-        (output_dir / "dense_status.json").write_text(
-            json.dumps({"status": "skipped", "reason": "skl2onnx and/or onnxruntime not installed"}, indent=2),
-            encoding="utf-8",
-        )
+        write_json(output_dir / "dense_status.json", {"status": "skipped", "reason": "skl2onnx and/or onnxruntime not installed"})
         return
 
     try:
@@ -67,19 +53,10 @@ def export_dense_classifier_to_onnx(model, sample_array: np.ndarray, output_dir:
         session = ort.InferenceSession(onnx_path.as_posix(), providers=["CPUExecutionProvider"])
         input_name = session.get_inputs()[0].name
         runtime_outputs = session.run(None, {input_name: sample_array[:5]})
-        (output_dir / "dense_status.json").write_text(
-            json.dumps(
-                {
-                    "status": "completed",
-                    "onnx_path": str(onnx_path),
-                    "runtime_output_shapes": [list(np.array(output).shape) for output in runtime_outputs],
-                },
-                indent=2,
-            ),
-            encoding="utf-8",
-        )
+        write_json(output_dir / "dense_status.json", {
+            "status": "completed",
+            "onnx_path": str(onnx_path),
+            "runtime_output_shapes": [list(np.array(output).shape) for output in runtime_outputs],
+        })
     except Exception as exc:
-        (output_dir / "dense_status.json").write_text(
-            json.dumps({"status": "skipped", "reason": f"dense onnx export failed: {type(exc).__name__}"}, indent=2),
-            encoding="utf-8",
-        )
+        write_json(output_dir / "dense_status.json", {"status": "skipped", "reason": f"dense onnx export failed: {type(exc).__name__}"})

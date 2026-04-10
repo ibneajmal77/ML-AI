@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime
 from pathlib import Path
 from typing import Any
 
@@ -13,7 +14,16 @@ from sklearn.pipeline import Pipeline
 
 from p1_customer_health.analysis.failure_taxonomy import write_failure_taxonomy
 from p1_customer_health.domain.dataset import CLASSIFICATION_TARGET, time_split
-from p1_customer_health.training.metrics import best_threshold, calibration_report, classification_metrics, classification_slice_report, ensure_dir, fit_diagnosis_report, random_resample, write_json
+from p1_customer_health.training.metrics import (
+    best_threshold,
+    calibration_report,
+    classification_metrics,
+    classification_slice_report,
+    ensure_dir,
+    fit_diagnosis_report,
+    random_resample,
+    write_json,
+)
 from p1_customer_health.training.preprocessing import dense_tabular_preprocessor, mixed_preprocessor
 
 
@@ -67,18 +77,26 @@ def train_classifier(df: pd.DataFrame, artifact_root: Path) -> None:
             best_threshold_value = threshold
 
     assert best_pipeline is not None
+
+    # Calibrate on training data, tune threshold on validation (never on test)
     calibrated_pipeline = CalibratedClassifierCV(clone(best_pipeline), method="sigmoid", cv=3)
     calibrated_pipeline.fit(train_df, y_train)
-    calibrated_scores = calibrated_pipeline.predict_proba(test_df)[:, 1]
-    calibrated_threshold = best_threshold(y_test, calibrated_scores)
+    calibrated_val_scores = calibrated_pipeline.predict_proba(val_df)[:, 1]
+    calibrated_threshold = best_threshold(y_val, calibrated_val_scores)
+
+    # Final evaluation on held-out test set — no decisions made from this
     test_scores = best_pipeline.predict_proba(test_df)[:, 1]
+    calibrated_test_scores = calibrated_pipeline.predict_proba(test_df)[:, 1]
     test_metrics = classification_metrics(y_test, test_scores, best_threshold_value)
-    calibrated_metrics = classification_metrics(y_test, calibrated_scores, calibrated_threshold)
+    calibrated_metrics = classification_metrics(y_test, calibrated_test_scores, calibrated_threshold)
+
     calibration_report(y_test, test_scores).to_csv(output_dir / "calibration_bins.csv", index=False)
-    calibration_report(y_test, calibrated_scores).to_csv(output_dir / "calibrated_calibration_bins.csv", index=False)
+    calibration_report(y_test, calibrated_test_scores).to_csv(output_dir / "calibrated_calibration_bins.csv", index=False)
     classification_slice_report(test_df, y_test, test_scores, best_threshold_value).to_csv(output_dir / "slice_analysis.csv", index=False)
     write_failure_taxonomy(test_df, test_scores, best_threshold_value, output_dir)
     fit_diagnosis_report(leaderboard, output_dir)
     write_json(output_dir / "metrics.json", {"selected_model": best_name, "selected_threshold": best_threshold_value, "selected_calibrated_threshold": calibrated_threshold, "leaderboard": leaderboard, "test_metrics": test_metrics, "calibrated_test_metrics": calibrated_metrics})
-    joblib.dump({"model": best_pipeline, "threshold": best_threshold_value, "task": "classification"}, output_dir / "model.joblib")
-    joblib.dump({"model": calibrated_pipeline, "threshold": calibrated_threshold, "task": "classification_calibrated"}, output_dir / "calibrated_model.joblib")
+
+    trained_at = datetime.datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
+    joblib.dump({"model": best_pipeline, "threshold": best_threshold_value, "task": "classification", "trained_at": trained_at}, output_dir / "model.joblib")
+    joblib.dump({"model": calibrated_pipeline, "threshold": calibrated_threshold, "task": "classification_calibrated", "trained_at": trained_at}, output_dir / "calibrated_model.joblib")

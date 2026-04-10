@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from pathlib import Path
-import json
+
+from p1_customer_health.utils import ensure_dir, write_json
 
 
 def write_business_decision_workflow(output_dir: Path) -> None:
-    output_dir.mkdir(parents=True, exist_ok=True)
+    ensure_dir(output_dir)
     payload = {
         "project_domain": "saas_customer_health",
         "decision_workflow": [
@@ -27,4 +28,4 @@ def write_business_decision_workflow(output_dir: Path) -> None:
             },
         ],
     }
-    (output_dir / "business_decisions.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    write_json(output_dir / "business_decisions.json", payload)

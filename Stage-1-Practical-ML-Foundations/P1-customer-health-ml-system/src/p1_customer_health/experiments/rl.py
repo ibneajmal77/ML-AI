@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+from p1_customer_health.utils import ensure_dir, write_json
 
 
 ACTIONS = ["do_nothing", "send_email", "offer_discount"]
@@ -34,7 +35,7 @@ def _reward(state: str, action: str, rng: np.random.Generator) -> float:
 
 
 def run_contextual_bandit(df: pd.DataFrame, output_dir: Path, episodes: int = 2000, seed: int = 42) -> None:
-    output_dir.mkdir(parents=True, exist_ok=True)
+    ensure_dir(output_dir)
     rng = np.random.default_rng(seed)
     q_values = {state: {action: 0.0 for action in ACTIONS} for state in ["high_risk", "medium_risk", "healthy"]}
     counts = {state: {action: 0 for action in ACTIONS} for state in ["high_risk", "medium_risk", "healthy"]}
@@ -54,10 +55,12 @@ def run_contextual_bandit(df: pd.DataFrame, output_dir: Path, episodes: int = 20
         q_values[state][action] += (reward - q_values[state][action]) / step
         rewards.append(reward)
 
-    payload = {
-        "policy": {state: max(actions, key=actions.get) for state, actions in q_values.items()},
-        "q_values": q_values,
-        "average_reward": round(float(np.mean(rewards)), 4),
-        "episodes": len(rewards),
-    }
-    (output_dir / "contextual_bandit_report.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    write_json(
+        output_dir / "contextual_bandit_report.json",
+        {
+            "policy": {state: max(actions, key=actions.get) for state, actions in q_values.items()},
+            "q_values": q_values,
+            "average_reward": round(float(np.mean(rewards)), 4),
+            "episodes": len(rewards),
+        },
+    )

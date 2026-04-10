@@ -1,0 +1,6 @@
+{
+  "status": "completed",
+  "historical_reward_rate": 0.5387,
+  "recommended_policy_reward_rate_on_matched_contexts": 0.483,
+  "note": "Contextual-bandit-style toss-decisioning exercise.  This is a heuristic policy evaluation, not a trained RL agent."
+}

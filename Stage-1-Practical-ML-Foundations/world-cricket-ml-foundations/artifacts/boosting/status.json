@@ -1,0 +1,4 @@
+{
+  "status": "skipped",
+  "reason": "pip install world-cricket-ml-foundations[boosting]"
+}

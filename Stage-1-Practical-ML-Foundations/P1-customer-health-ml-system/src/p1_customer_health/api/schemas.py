@@ -13,17 +13,20 @@ class CustomerHealthRecord(BaseModel):
     monthly_spend: float
     logins_30d: int
     tickets_30d: int
-    feature_adoption_ratio: float = Field(ge=0.0, le=1.5)
+    # Ratio 0–1: fraction of available features actually used
+    feature_adoption_ratio: float = Field(ge=0.0, le=1.0)
     days_since_last_activity: int
     account_age_days: int
     nps_score: int
     payment_failures_90d: int
-    seat_utilization: float = Field(ge=0.0, le=1.5)
-    support_note: str
+    # Utilization can exceed 1.0 when accounts over-provision seats
+    seat_utilization: float = Field(ge=0.0, le=2.0)
+    support_note: str = Field(min_length=1)
 
 
 class PredictRequest(BaseModel):
-    records: list[CustomerHealthRecord]
+    # Capped at 500 records per request to prevent resource exhaustion
+    records: list[CustomerHealthRecord] = Field(min_length=1, max_length=500)
 
 
 class PredictionRow(BaseModel):

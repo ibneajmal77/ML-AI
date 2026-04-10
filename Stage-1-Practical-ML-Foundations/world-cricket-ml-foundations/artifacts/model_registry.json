@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "trained_at": "2026-04-07T19:09:44.678960+00:00",
+  "data_window": {
+    "start": "2024-04-01",
+    "end": "2026-03-31"
+  },
+  "snapshot_rows": 684,
+  "teams_found": 19,
+  "classification": {
+    "best_model": "gradient_boosting",
+    "serving_artifact": "raw_model",
+    "serving_threshold": 0.6,
+    "test_roc_auc": 0.8049,
+    "test_f1": 0.6882,
+    "test_pr_auc": 0.7127,
+    "test_business_cost": 76,
+    "cross_validation": {
+      "method": "TimeSeriesSplit(n_splits=3)",
+      "cv_roc_auc_scores": [
+        0.7956,
+        0.5628,
+        0.4894
+      ],
+      "cv_roc_auc_mean": 0.6159,
+      "cv_roc_auc_std": 0.1305
+    }
+  },
+  "regression": {
+    "best_model": "gradient_boosting_regressor",
+    "test_mae": 0.217,
+    "test_rmse": 0.276,
+    "test_r2": 0.2838,
+    "test_mape": 0.3084
+  }
+}
