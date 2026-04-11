@@ -1,12 +1,4 @@
 {
-  "status": "completed",
-  "onnx_path": "artifacts\\onnx\\dense_classifier.onnx",
-  "runtime_output_shapes": [
-    [
-      5
-    ],
-    [
-      5
-    ]
-  ]
+  "status": "skipped",
+  "reason": "skl2onnx and/or onnxruntime not installed"
 }

@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import pandas as pd
 
 from p1_customer_health.domain.dataset import CLASSIFICATION_TARGET, REGRESSION_TARGET, TIMESTAMP_COLUMN
+from p1_customer_health.utils import ensure_dir, write_json
 
 
 FORBIDDEN_COLUMNS = [
@@ -16,7 +16,7 @@ FORBIDDEN_COLUMNS = [
 
 
 def write_leakage_report(train_df: pd.DataFrame, validation_df: pd.DataFrame, test_df: pd.DataFrame, output_dir: Path) -> None:
-    output_dir.mkdir(parents=True, exist_ok=True)
+    ensure_dir(output_dir)
     payload = {
         "chronology_ok": bool(train_df[TIMESTAMP_COLUMN].max() <= validation_df[TIMESTAMP_COLUMN].min() <= test_df[TIMESTAMP_COLUMN].min()),
         "forbidden_columns_present": [column for column in FORBIDDEN_COLUMNS if column in train_df.columns],
@@ -28,4 +28,4 @@ def write_leakage_report(train_df: pd.DataFrame, validation_df: pd.DataFrame, te
             "test_min_date": str(test_df[TIMESTAMP_COLUMN].min().date()),
         },
     }
-    (output_dir / "leakage_report.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    write_json(output_dir / "leakage_report.json", payload)

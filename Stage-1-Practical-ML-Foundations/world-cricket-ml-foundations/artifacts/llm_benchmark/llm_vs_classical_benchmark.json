@@ -1,0 +1,6 @@
+{
+  "classical_tabular_roc_auc": 0.8049,
+  "text_only_proxy_roc_auc": 0.752,
+  "winner": "classical_tabular_ml",
+  "justification": "Structured historical form, opponent strength, and schedule features are richer than short textual summaries for this bounded binary classification task."
+}

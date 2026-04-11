@@ -1,0 +1,40 @@
+{
+  "blocked_from_training": [
+    "dominant_next_cycle",
+    "downfall_next_cycle",
+    "future_avg_nrr_next_5",
+    "future_matches_available",
+    "future_win_rate_next_5"
+  ],
+  "suspicious_feature_names": [],
+  "time_split_policy": "train on older dates and evaluate on the newest 20 percent of rows by match date",
+  "implemented_holdout": "single time-based holdout split",
+  "status": "ok",
+  "mutual_info_scan": {
+    "won_toss": 0.0242,
+    "batted_first": 0.0,
+    "team_runs": 0.0106,
+    "team_wickets_lost": 0.0,
+    "opponent_runs": 0.0078,
+    "opponent_wickets_lost": 0.0165,
+    "team_run_rate": 0.0054,
+    "opponent_run_rate": 0.0016,
+    "match_nrr": 0.017,
+    "rolling_3_win_rate": 0.0467,
+    "rolling_5_win_rate": 0.0617,
+    "rolling_10_win_rate": 0.0692,
+    "rolling_3_avg_nrr": 0.0523,
+    "rolling_5_avg_nrr": 0.0631,
+    "rolling_10_avg_nrr": 0.0645,
+    "rolling_3_avg_runs": 0.0222,
+    "rolling_5_avg_runs": 0.0498,
+    "rolling_10_avg_runs": 0.0471,
+    "matches_played_so_far": 0.0296,
+    "rest_days": 0.0,
+    "opponent_rolling_5_win_rate": 0.0085,
+    "year": 0.0051,
+    "month": 0.0721,
+    "quarter": 0.0375
+  },
+  "high_mi_features": []
+}

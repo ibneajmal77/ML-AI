@@ -1,0 +1,41 @@
+{
+  "best_model": "gradient_boosting_regressor",
+  "candidate_metrics": {
+    "decision_tree": {
+      "mae": 0.2607,
+      "rmse": 0.3347,
+      "r2": -0.0532,
+      "mape": 0.4087,
+      "train_r2": 0.4417,
+      "train_mae": 0.1504,
+      "train_mape": 0.3634
+    },
+    "elastic_net": {
+      "mae": 0.2555,
+      "rmse": 0.3159,
+      "r2": 0.062,
+      "mape": 0.4393,
+      "train_r2": 0.6544,
+      "train_mae": 0.1256,
+      "train_mape": 0.3046
+    },
+    "random_forest_regressor": {
+      "mae": 0.2171,
+      "rmse": 0.2771,
+      "r2": 0.2783,
+      "mape": 0.3183,
+      "train_r2": 0.8626,
+      "train_mae": 0.075,
+      "train_mape": 0.1706
+    },
+    "gradient_boosting_regressor": {
+      "mae": 0.217,
+      "rmse": 0.276,
+      "r2": 0.2838,
+      "mape": 0.3084,
+      "train_r2": 0.7518,
+      "train_mae": 0.1059,
+      "train_mape": 0.2566
+    }
+  }
+}

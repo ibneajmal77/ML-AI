@@ -15,11 +15,14 @@ def run_boosting_benchmark(df: pd.DataFrame, artifact_root: Path) -> None:
     ensure_dir(output_dir)
     split = time_split(df)
     train_df = split.train
+    val_df = split.validation
     test_df = split.test
     y_train = train_df[CLASSIFICATION_TARGET]
-    y_test = split.test[CLASSIFICATION_TARGET]
+    y_val = val_df[CLASSIFICATION_TARGET]
+    y_test = test_df[CLASSIFICATION_TARGET]
     preprocessor = dense_tabular_preprocessor()
     x_train = preprocessor.fit_transform(train_df)
+    x_val = preprocessor.transform(val_df)
     x_test = preprocessor.transform(test_df)
 
     candidates: list[tuple[str, Any]] = []
@@ -41,8 +44,10 @@ def run_boosting_benchmark(df: pd.DataFrame, artifact_root: Path) -> None:
     leaderboard: list[dict[str, Any]] = []
     for name, model in candidates:
         model.fit(x_train, y_train)
-        scores = model.predict_proba(x_test)[:, 1]
-        threshold = best_threshold(y_test, scores)
-        metrics = classification_metrics(y_test, scores, threshold)
+        # Tune threshold on validation set; evaluate on held-out test set
+        val_scores = model.predict_proba(x_val)[:, 1]
+        threshold = best_threshold(y_val, val_scores)
+        test_scores = model.predict_proba(x_test)[:, 1]
+        metrics = classification_metrics(y_test, test_scores, threshold)
         leaderboard.append({"model": name, "threshold": threshold, "test_metrics": metrics})
     write_json(output_dir / "status.json", {"status": "completed", "leaderboard": leaderboard})

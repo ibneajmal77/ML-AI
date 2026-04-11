@@ -1,7 +1,7 @@
 {
   "selected_model": "logistic_mixed",
   "selected_threshold": 0.4,
-  "selected_calibrated_threshold": 0.1,
+  "selected_calibrated_threshold": 0.125,
   "leaderboard": [
     {
       "model": "logistic_mixed",
@@ -64,10 +64,10 @@
     "brier": 0.2295
   },
   "calibrated_test_metrics": {
-    "accuracy": 0.3213,
-    "precision": 0.2157,
-    "recall": 0.9257,
-    "f1": 0.3499,
+    "accuracy": 0.432,
+    "precision": 0.2367,
+    "recall": 0.8446,
+    "f1": 0.3698,
     "pr_auc": 0.3357,
     "roc_auc": 0.6591,
     "brier": 0.1502

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime
 from pathlib import Path
 from typing import Any
 
@@ -51,4 +52,5 @@ def train_regressor(df: pd.DataFrame, artifact_root: Path) -> None:
     test_preds = best_pipeline.predict(test_df)
     write_json(output_dir / "metrics.json", {"selected_model": best_name, "leaderboard": leaderboard, "test_metrics": {"mae": round(float(mean_absolute_error(y_test, test_preds)), 4), "rmse": round(float(np.sqrt(mean_squared_error(y_test, test_preds))), 4), "r2": round(float(r2_score(y_test, test_preds)), 4)}})
     fit_diagnosis_report(leaderboard, output_dir)
-    joblib.dump({"model": best_pipeline, "task": "regression"}, output_dir / "model.joblib")
+    trained_at = datetime.datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
+    joblib.dump({"model": best_pipeline, "task": "regression", "trained_at": trained_at}, output_dir / "model.joblib")

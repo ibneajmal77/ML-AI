@@ -1,31 +1,4 @@
 {
-  "status": "completed",
-  "leaderboard": [
-    {
-      "model": "xgboost",
-      "threshold": 0.1,
-      "test_metrics": {
-        "accuracy": 0.4573,
-        "precision": 0.2274,
-        "recall": 0.7297,
-        "f1": 0.3467,
-        "pr_auc": 0.2712,
-        "roc_auc": 0.5841,
-        "brier": 0.1613
-      }
-    },
-    {
-      "model": "lightgbm",
-      "threshold": 0.125,
-      "test_metrics": {
-        "accuracy": 0.588,
-        "precision": 0.2428,
-        "recall": 0.5135,
-        "f1": 0.3297,
-        "pr_auc": 0.2259,
-        "roc_auc": 0.5613,
-        "brier": 0.1735
-      }
-    }
-  ]
+  "status": "skipped",
+  "reason": "xgboost and lightgbm not installed"
 }

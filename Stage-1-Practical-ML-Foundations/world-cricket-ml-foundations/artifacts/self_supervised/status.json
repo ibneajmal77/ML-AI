@@ -1,0 +1,13 @@
+{
+  "status": "completed",
+  "method": "Text-feature proxy: TF-IDF + SVD embeddings from match narratives, then supervised LogisticRegression.  The SVD stage is unsupervised (representation learning without labels); the classifier is supervised. This is NOT true self-supervised learning \u2014 it is included as a paradigm-contrast experiment.",
+  "metrics": {
+    "threshold": 0.5,
+    "accuracy": 0.6538,
+    "precision": 0.4478,
+    "recall": 0.7895,
+    "f1": 0.5714,
+    "roc_auc": 0.7477,
+    "pr_auc": 0.5481
+  }
+}

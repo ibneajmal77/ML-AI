@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Any
 
@@ -9,13 +8,7 @@ import pandas as pd
 from sklearn.calibration import calibration_curve
 from sklearn.metrics import accuracy_score, average_precision_score, brier_score_loss, f1_score, precision_score, recall_score, roc_auc_score
 
-
-def ensure_dir(path: Path) -> None:
-    path.mkdir(parents=True, exist_ok=True)
-
-
-def write_json(path: Path, payload: dict[str, Any]) -> None:
-    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+from p1_customer_health.utils import ensure_dir, write_json
 
 
 def classification_metrics(y_true: pd.Series, scores: np.ndarray, threshold: float) -> dict[str, float]:

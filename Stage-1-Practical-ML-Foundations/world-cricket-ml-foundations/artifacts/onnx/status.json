@@ -1,0 +1,4 @@
+{
+  "status": "skipped",
+  "reason": "Install skl2onnx and onnxruntime (pip install world-cricket-ml-foundations[onnx])."
+}

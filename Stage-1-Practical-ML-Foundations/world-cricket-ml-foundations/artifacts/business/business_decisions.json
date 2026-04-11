@@ -1,0 +1,76 @@
+{
+  "business_question": "Which top-20 T20I teams are best positioned to dominate the next global event cycle?",
+  "decision_outputs": {
+    "dominance_watchlist": [
+      {
+        "team": "New Zealand",
+        "dominance_probability": 0.8761596906598318
+      },
+      {
+        "team": "India",
+        "dominance_probability": 0.799368767745615
+      },
+      {
+        "team": "England",
+        "dominance_probability": 0.7890648969394304
+      },
+      {
+        "team": "Pakistan",
+        "dominance_probability": 0.7689900513452618
+      },
+      {
+        "team": "West Indies",
+        "dominance_probability": 0.7533554151002049
+      }
+    ],
+    "downfall_watchlist": [
+      {
+        "team": "Zimbabwe",
+        "downfall_risk": 0.40348462678186114
+      },
+      {
+        "team": "Scotland",
+        "downfall_risk": 0.3763048884721359
+      },
+      {
+        "team": "Nepal",
+        "downfall_risk": 0.3643822912636078
+      },
+      {
+        "team": "Ireland",
+        "downfall_risk": 0.3639382093911175
+      },
+      {
+        "team": "USA",
+        "downfall_risk": 0.3289765174223011
+      }
+    ],
+    "underdog_watchlist": [
+      {
+        "team": "New Zealand",
+        "surprise_score": 0.4380798453299159
+      },
+      {
+        "team": "West Indies",
+        "surprise_score": 0.37667770755010244
+      },
+      {
+        "team": "Bangladesh",
+        "surprise_score": 0.2470965508496687
+      },
+      {
+        "team": "Pakistan",
+        "surprise_score": 0.23069701540357856
+      },
+      {
+        "team": "Australia",
+        "surprise_score": 0.21761371785323336
+      }
+    ]
+  },
+  "operational_use_cases": [
+    "Team analyst dashboard for tournament scouting",
+    "Broadcast storyline generation from model-backed momentum signals",
+    "Learning project covering end-to-end tabular ML on sports data"
+  ]
+}

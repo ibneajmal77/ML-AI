@@ -1,0 +1,33 @@
+# Core runtime dependencies — mirrors [project.dependencies] in pyproject.toml.
+fastapi>=0.115,<0.116
+uvicorn[standard]>=0.34,<0.35
+pydantic>=2.10,<3.0
+pydantic-settings>=2.8,<3.0
+numpy>=2.2,<3.0
+pandas>=2.2,<3.0
+scikit-learn>=1.5,<2.0
+joblib>=1.4,<2.0
+
+# Development / testing (mirrors [project.optional-dependencies.dev]).
+# Install with: pip install -e ".[dev]"
+# pytest>=8.3,<9.0
+
+# Optional boosting benchmark (mirrors [project.optional-dependencies.boosting]).
+# Install with: pip install -e ".[boosting]"
+# Enables: XGBClassifier, XGBRegressor, LGBMClassifier, LGBMRegressor in experiments/boosting.py
+# xgboost>=2.1,<3.0
+# lightgbm>=4.6,<5.0
+
+# Optional ONNX export (mirrors [project.optional-dependencies.onnx]).
+# Install with: pip install -e ".[onnx]"
+# Enables: ONNX model export in experiments/onnx_export.py
+# skl2onnx>=1.18,<2.0
+# onnxruntime>=1.20,<2.0
+
+# Optional SMOTE oversampling (mirrors [project.optional-dependencies.imbalanced]).
+# Install with: pip install -e ".[imbalanced]"
+# Enables: SMOTE-based model variant ("smote_random_forest") in training/classification.py
+# Covers Lesson 1.10 — SMOTE as a third imbalance strategy alongside class_weight and random oversampling.
+# imbalanced-learn>=0.12,<1.0
+
+# Install everything at once: pip install -e ".[all]"
