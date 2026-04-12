@@ -15,6 +15,28 @@ from world_cricket_ml.utils import compute_team_signals, read_json
 log = logging.getLogger(__name__)
 
 
+TEAM_NAME_ALIASES = {
+    "srilanka": "Sri Lanka",
+    "sl": "Sri Lanka",
+    "uae": "United Arab Emirates",
+    "unitedarabemirates": "United Arab Emirates",
+    "wi": "West Indies",
+    "westindies": "West Indies",
+    "nz": "New Zealand",
+    "newzealand": "New Zealand",
+    "sa": "South Africa",
+    "southafrica": "South Africa",
+    "usa": "USA",
+    "us": "USA",
+}
+
+
+def _canonical_team_key(value: str) -> str:
+    compact = "".join(value.lower().split())
+    canonical = TEAM_NAME_ALIASES.get(compact, value)
+    return "".join(canonical.lower().split())
+
+
 class PredictionService:
     def __init__(self, project_root: Path) -> None:
         self.project_root = project_root
@@ -61,7 +83,9 @@ class PredictionService:
         ]].to_dict(orient="records")
 
     def predict_team(self, team: str) -> dict:
-        frame = self.latest[self.latest["team"].str.lower() == team.lower()].copy()
+        team_key = _canonical_team_key(team)
+        latest_team_keys = self.latest["team"].map(_canonical_team_key)
+        frame = self.latest[latest_team_keys == team_key].copy()
         if frame.empty:
             raise KeyError(team)
         row = frame.iloc[[0]].copy()
