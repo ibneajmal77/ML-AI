@@ -259,6 +259,56 @@ Operations:      process → how it breaks at scale → how to instrument → ho
 
 ---
 
+## CONCEPT EXPLANATION FORMAT — applies inside every concept block in Section 4
+
+Human working memory is limited. Every concept explanation must minimize extraneous load (wasted effort parsing the format) so the learner's cognitive budget goes toward forming the concept, not decoding the prose.
+
+**The required sequence for every concept:**
+
+```
+1. SCENARIO — one sentence, concrete situation the learner can picture immediately
+   No jargon. No concept name yet. Just the situation.
+   Example: "You build a support bot. A user asks: 'Why is my payment failing?'"
+
+2. WHAT HAPPENS — numbered steps or arrow chains, one line each
+   Walk through the mechanism as a visible sequence.
+   Use → to show flow, | to separate parallel things.
+   Example:
+     1. "payment failing" → mapped to meaning space
+     2. clusters nearby: billing, error, transaction
+     3. model focuses on "payment" + "failing", ignores filler
+     4. generates response from that focused context
+
+3. NAME — introduce the concept label after the learner has seen it work
+   "This step-3 focusing process is called attention."
+   The name lands on understanding, not in front of it.
+
+4. ENGINEERING IMPLICATION — 2–3 bullets, not a paragraph
+   What does this mean for how you build or design?
+   Use a direct comparison where possible:
+     50 policies in context  →  attention diluted  →  bad result
+     5 relevant docs only    →  attention focused  →  strong result
+
+5. COMMON TRAP — one line
+   The single most frequent mistake with this concept.
+   Example: "Assuming more context always helps — it doesn't if it's irrelevant."
+```
+
+**What this forbids:**
+- Opening a concept with the concept name or a definition sentence before any scenario
+- Paragraphs longer than 3 sentences without a structural break (bullets, steps, table, code)
+- Abstract explanation before concrete example — always concrete first
+
+**What this applies to:**
+All concept explanations in Section 4, across all lesson types.
+The scenario and steps adapt to the lesson type — a Foundation lesson shows a system behavior, an Implementation lesson shows a failure case, a Prompt Engineering lesson shows a before/after prompt — but the sequence is always: scenario → steps → name → implication → trap.
+
+**What this does NOT apply to:**
+Section 5 (Project Integration skeletons), Section 6 (exercise instructions), Section 8 (Key Takeaways).
+Those sections have their own format rules.
+
+---
+
 ## SECTION 5 — PROJECT INTEGRATION
 
 Not the last section — the spine of the lesson.
