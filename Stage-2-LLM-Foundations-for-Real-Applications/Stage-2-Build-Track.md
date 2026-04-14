@@ -72,6 +72,21 @@ No LangChain. No LangGraph yet (that comes in Stage 4). Direct API calls through
 
 ## Final Repo Structure
 
+Note: Step 2.3 also requires the following structure additions, which were omitted from the tree below:
+
+```text
+app/
+└── utils/
+    ├── __init__.py
+    └── tokens.py
+
+tests/
+├── __init__.py
+└── unit/
+    ├── __init__.py
+    └── test_tokens.py
+```
+
 ```
 ticket-ops-api/
 ├── app/
