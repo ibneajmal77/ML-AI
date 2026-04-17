@@ -1,45 +1,37 @@
-# app/routers/tickets.py — /classify endpoint
+from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
 
+from app.config import settings
+from app.schemas.ticket import ClassifyResponse, ExtractResponse, TicketRequest
 from app.services.classify import classify_ticket
-from app.utils.tokens import count_tokens, fits_in_budget
-
-router = APIRouter(prefix="/tickets", tags=["tickets"])
-
-# Upper bound for a single ticket — anything longer gets rejected before the API call
-_MAX_TICKET_INPUT_TOKENS = 2_000
+from app.services.extract import extract_ticket
+from app.utils.tokens import fits_in_budget
 
 
-class TicketRequest(BaseModel):
-    text: str
+router = APIRouter(tags=["tickets"])
 
 
-class ClassifyResponse(BaseModel):
-    category: str
-    input_tokens: int  # Logged for cost monitoring
-
-
-@router.post("/classify", response_model=ClassifyResponse)
-def classify(request: TicketRequest) -> ClassifyResponse:
-    """
-    Classify a support ticket into billing, technical, account, or general.
-
-    Returns the category label and input token count for cost monitoring.
-    Rejects input over 2,000 tokens with a 422 before making an API call.
-    """
-    if not fits_in_budget(request.text, _MAX_TICKET_INPUT_TOKENS):
+def _validate_budget(text: str) -> None:
+    if not fits_in_budget(text, settings.max_ticket_input_tokens):
         raise HTTPException(
             status_code=422,
             detail=(
-                f"Ticket text exceeds {_MAX_TICKET_INPUT_TOKENS} token limit. "
+                f"Ticket text exceeds {settings.max_ticket_input_tokens} token limit. "
                 "Please shorten the input."
             ),
         )
 
-    category = classify_ticket(request.text)
-    return ClassifyResponse(
-        category=category,
-        input_tokens=count_tokens(request.text),
-    )
+
+@router.post("/classify", response_model=ClassifyResponse)
+@router.post("/tickets/classify", response_model=ClassifyResponse, include_in_schema=False)
+def classify(request: TicketRequest) -> ClassifyResponse:
+    _validate_budget(request.text)
+    return classify_ticket(request.text)
+
+
+@router.post("/extract", response_model=ExtractResponse)
+@router.post("/tickets/extract", response_model=ExtractResponse, include_in_schema=False)
+def extract(request: TicketRequest) -> ExtractResponse:
+    _validate_budget(request.text)
+    return extract_ticket(request.text)

@@ -1,1 +1,1 @@
-
+"""Prompt modules and registries."""

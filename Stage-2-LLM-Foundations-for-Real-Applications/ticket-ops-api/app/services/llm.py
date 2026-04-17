@@ -1,90 +1,90 @@
-# app/services/llm.py
-"""
-OpenAI client wrapper.
+from __future__ import annotations
 
-All service modules call chat_with_retry() — they do not construct the OpenAI
-client or set parameters directly. This is the single place where the API client
-is constructed, retry logic lives, and per-call token usage is logged.
-
-Retry strategy, caching, and cost optimization are expanded in 2.15.
-"""
-
-import logging
+import json
 import time
+from dataclasses import dataclass
+from typing import Protocol
 
-from openai import OpenAI, APIError, RateLimitError
+from openai import APIError, OpenAI, RateLimitError
 
-from app.config import settings, LLMConfig
-from app.utils.tokens import count_messages_tokens
+from app.config import LLMConfig, settings
+from app.utils.tokens import count_messages_tokens, count_tokens
 
-logger = logging.getLogger(__name__)
 
-# ── Client singleton ──────────────────────────────────────────────────────────
-# Constructed once at module import. All service calls use this instance.
-_client = OpenAI(api_key=settings.openai_api_key)
+@dataclass(frozen=True)
+class ChatResult:
+    content: str
+    input_tokens: int
+    output_tokens: int
+    model: str
+
+
+class LLMBackend(Protocol):
+    def chat(self, messages: list[dict], config: LLMConfig) -> ChatResult: ...
+
+
+class OpenAIBackend:
+    def __init__(self) -> None:
+        self._client = OpenAI(api_key=settings.openai_api_key)
+
+    def chat(self, messages: list[dict], config: LLMConfig) -> ChatResult:
+        model = config.model or settings.model
+        response = self._client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=config.temperature,
+            top_p=config.top_p,
+            max_tokens=config.max_tokens,
+            stop=config.stop or None,
+        )
+        content = response.choices[0].message.content or ""
+        usage = response.usage
+        prompt_tokens = usage.prompt_tokens if usage else count_messages_tokens(messages, model)
+        completion_tokens = usage.completion_tokens if usage else count_tokens(content, model)
+        return ChatResult(
+            content=content,
+            input_tokens=prompt_tokens,
+            output_tokens=completion_tokens,
+            model=model,
+        )
+
+
+_backend: LLMBackend | None = None
+
+
+def get_backend() -> LLMBackend:
+    global _backend
+    if _backend is None:
+        _backend = OpenAIBackend()
+    return _backend
+
+
+def set_backend(backend: LLMBackend | None) -> None:
+    global _backend
+    _backend = backend
+
+
+def chat(messages: list[dict], config: LLMConfig) -> ChatResult:
+    return get_backend().chat(messages, config)
 
 
 def chat_with_retry(
     messages: list[dict],
     config: LLMConfig,
-    task: str = "unknown",
-    retries: int = 2,
-) -> str:
-    """
-    Call the chat completions API with task-specific parameters.
-
-    Returns the assistant message content as a string.
-    Retries up to `retries` times on rate limit or transient server errors.
-    Logs prompt tokens, completion tokens, and task name on every call.
-
-    Args:
-        messages:  OpenAI message format — [{"role": "...", "content": "..."}, ...]
-        config:    LLMConfig from get_task_config() — never hardcode params here
-        task:      Task name for log correlation
-        retries:   Retry attempts on transient errors (default 2)
-    """
-    prompt_tokens = count_messages_tokens(messages, model=config.model)
-
-    for attempt in range(retries + 1):
+    max_retries: int = 3,
+) -> ChatResult:
+    attempt = 0
+    while True:
         try:
-            response = _client.chat.completions.create(
-                model=config.model,
-                messages=messages,
-                temperature=config.temperature,
-                top_p=config.top_p,
-                max_tokens=config.max_tokens,
-                stop=config.stop if config.stop else None,
-            )
-
-            content = response.choices[0].message.content or ""
-            completion_tokens = response.usage.completion_tokens
-
-            logger.info(
-                "LLM call complete",
-                extra={
-                    "task": task,
-                    "model": config.model,
-                    "prompt_tokens": prompt_tokens,
-                    "completion_tokens": completion_tokens,
-                    "total_tokens": prompt_tokens + completion_tokens,
-                    "temperature": config.temperature,
-                },
-            )
-
-            return content
-
+            return chat(messages, config)
         except RateLimitError:
-            if attempt < retries:
-                wait = 2 ** attempt  # 1s then 2s
-                logger.warning(
-                    f"Rate limit hit (attempt {attempt + 1}/{retries + 1}), "
-                    f"retrying in {wait}s",
-                    extra={"task": task},
-                )
-                time.sleep(wait)
-            else:
+            attempt += 1
+            if attempt > max_retries:
                 raise
-
-        except APIError as e:
-            logger.error(f"API error on task {task!r}: {e}", extra={"task": task})
+            time.sleep(2 ** (attempt - 1))
+        except APIError:
             raise
+
+
+def parse_json_content(result: ChatResult) -> dict:
+    return json.loads(result.content)

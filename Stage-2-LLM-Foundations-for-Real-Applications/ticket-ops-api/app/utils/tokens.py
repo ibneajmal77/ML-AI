@@ -1,68 +1,44 @@
+from __future__ import annotations
 
-# app/utils/tokens.py
-
-import tiktoken
 from dataclasses import dataclass
 
+import tiktoken
 
-# ── Encoding cache ──────────────────────────────────────────────────────────
-# tiktoken.encoding_for_model() is fast but creates a new object each call.
-# Cache the encoder to avoid repeated initialization.
 
 _ENCODING_CACHE: dict[str, tiktoken.Encoding] = {}
+
 
 def _get_encoding(model: str) -> tiktoken.Encoding:
     if model not in _ENCODING_CACHE:
         try:
             _ENCODING_CACHE[model] = tiktoken.encoding_for_model(model)
         except KeyError:
-            # Fallback for unknown models — use the most recent OpenAI encoding
             _ENCODING_CACHE[model] = tiktoken.get_encoding("o200k_base")
     return _ENCODING_CACHE[model]
 
 
-# ── Core functions ───────────────────────────────────────────────────────────
-
 def count_tokens(text: str, model: str = "gpt-4o") -> int:
-    """
-    Return the number of tokens in text for the given model's tokenizer.
-
-    Use this before every API call to verify the prompt fits within budget.
-    """
     if not text:
         return 0
-    enc = _get_encoding(model)
-    return len(enc.encode(text))
+    return len(_get_encoding(model).encode(text))
 
 
-def count_messages_tokens(
-    messages: list[dict],
-    model: str = "gpt-4o",
-) -> int:
-    """
-    Return the token count for a messages list as the API receives it.
-
-    The API adds per-message overhead (~4 tokens per message for role/structure).
-    This function accounts for that overhead so counts match what the API charges.
-    """
-    enc = _get_encoding(model)
-    total = 0
+def count_messages_tokens(messages: list[dict], model: str = "gpt-4o") -> int:
+    encoder = _get_encoding(model)
+    total = 2
     for message in messages:
-        total += 4  # per-message overhead: role + structure tokens
+        total += 4
         for value in message.values():
-            total += len(enc.encode(str(value)))
-    total += 2  # reply priming tokens (the model starts its response)
+            total += len(encoder.encode(str(value)))
     return total
 
 
 def fits_in_budget(text: str, budget: int, model: str = "gpt-4o") -> bool:
-    """
-    Return True if text fits within the given token budget.
+    return count_tokens(text, model=model) <= budget
 
-    Use to check individual components (user content, tool results)
-    before assembling the full prompt.
-    """
-    return count_tokens(text, model) <= budget
+
+def max_input_tokens(context_limit: int, output_reserve: int) -> int:
+    return context_limit - output_reserve
 
 
 def truncate_to_token_budget(
@@ -71,57 +47,23 @@ def truncate_to_token_budget(
     model: str = "gpt-4o",
     truncation: str = "tail",
 ) -> tuple[str, bool]:
-    """
-    Truncate text to fit within the given token budget.
-
-    Returns (truncated_text, was_truncated).
-    Caller should log when was_truncated=True for monitoring.
-
-    truncation options:
-      "tail"   — keep the first `budget` tokens (default, good for ticket text)
-      "middle" — keep first budget//2 + last budget//2 tokens
-                 (preserves start and end, loses middle — 
-                  note: middle content may already get less attention, → 2.2)
-    """
-    enc = _get_encoding(model)
-    token_ids = enc.encode(text)
-
+    encoder = _get_encoding(model)
+    token_ids = encoder.encode(text)
     if len(token_ids) <= budget:
         return text, False
-
     if truncation == "tail":
-        truncated_ids = token_ids[:budget]
+        trimmed = token_ids[:budget]
     elif truncation == "middle":
-        half = budget // 2
-        truncated_ids = token_ids[:half] + token_ids[-half:]
+        head = budget // 2
+        tail = budget - head
+        trimmed = token_ids[:head] + token_ids[-tail:]
     else:
         raise ValueError(f"Unknown truncation strategy: {truncation!r}")
+    return encoder.decode(trimmed), True
 
-    return enc.decode(truncated_ids), True
 
-
-# ── Budget planning ──────────────────────────────────────────────────────────
-
-@dataclass
+@dataclass(frozen=True)
 class TokenBudget:
-    """
-    Explicit token budget for one API call.
-
-    Plan this before building the prompt — not after.
-    Fill each component within its allocation.
-    Validate before calling the API.
-
-    Example:
-        budget = TokenBudget(
-            context_limit=128_000,
-            output_reserve=1_000,
-            system_prompt=600,
-            instructions=200,
-            content=800,
-            tool_results=0,
-        )
-        assert budget.is_valid(), f"Budget exceeds context limit: {budget.total}"
-    """
     context_limit: int
     output_reserve: int
     system_prompt: int
@@ -143,11 +85,6 @@ class TokenBudget:
     @property
     def total(self) -> int:
         return self.input_total + self.output_reserve
-
-    @property
-    def content_remaining(self) -> int:
-        """How many tokens are available for additional content beyond planned."""
-        return self.context_limit - self.total
 
     def is_valid(self) -> bool:
         return self.total <= self.context_limit

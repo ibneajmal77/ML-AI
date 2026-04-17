@@ -1,45 +1,31 @@
-# app/services/classify.py — minimal version
-# Prompt is upgraded in 2.5 (few-shot examples + constraints from templates.py)
-
-import logging
+from __future__ import annotations
 
 from app.config import get_task_config
+from app.prompts import classify_v1  # noqa: F401
+from app.prompts.registry import latest
+from app.schemas.ticket import ClassifyResponse
 from app.services.llm import chat_with_retry
 
-logger = logging.getLogger(__name__)
 
-# Minimal system prompt — upgraded to production quality in 2.5
-CLASSIFY_SYSTEM_PROMPT = (
-    "You are a support ticket classification assistant. "
-    "Classify support tickets into exactly one of these categories: "
-    "billing, technical, account, general. "
-    "Return the category label only. No explanation."
-)
-
-_VALID_LABELS = {"billing", "technical", "account", "general"}
+VALID_LABELS = {"billing", "technical", "account", "general"}
 
 
-def classify_ticket(ticket_text: str) -> str:
-    """
-    Classify a support ticket into one of four categories.
-
-    Returns the category label as a lowercase string.
-    Falls back to "general" and logs a warning on unexpected model output.
-    Prompt is upgraded with few-shot examples and constraints in 2.5.
-    """
+def classify_ticket(ticket_text: str) -> ClassifyResponse:
+    prompt = latest("classify")
     config = get_task_config("classification")
-    messages = [
-        {"role": "system", "content": CLASSIFY_SYSTEM_PROMPT},
-        {"role": "user", "content": ticket_text},
-    ]
-    raw = chat_with_retry(messages, config, task="classification")
-    label = raw.strip().lower()
-
-    if label not in _VALID_LABELS:
-        logger.warning(
-            "Unexpected classification label — falling back to 'general'",
-            extra={"raw_output": label[:100]},
-        )
-        return "general"
-
-    return label
+    result = chat_with_retry(
+        [
+            {"role": "system", "content": prompt.system_prompt},
+            {"role": "user", "content": prompt.render_user_message(ticket_text)},
+        ],
+        config,
+    )
+    label = result.content.strip().lower()
+    if label not in VALID_LABELS:
+        label = "general"
+    return ClassifyResponse(
+        label=label,
+        input_tokens=result.input_tokens,
+        output_tokens=result.output_tokens,
+        prompt_version=prompt.version,
+    )
