@@ -178,7 +178,14 @@ References: [concepts cited but not re-explained — use reference syntax]
 Builds on:  [previous lesson — one line on what it contributed to the project]
 Enables:    [next lesson — one line on what this lesson unlocks]
 Project:    [module/file being built this lesson]
+
+Scope Firewall:
+  Must know now:        [concepts the learner must fully own before leaving this lesson]
+  Recognize but defer:  [concepts that will appear but are owned by a later lesson]
+  Ignore for now:       [concepts that are out of scope for this stage entirely]
 ```
+
+The scope firewall is mandatory. If a concept appears in the lesson but belongs to the "Ignore" or "Defer" buckets, it gets one sentence maximum and a citation — never a full explanation. This is what prevents lessons from collapsing into undisciplined surveys.
 
 ---
 
@@ -213,9 +220,11 @@ This is not "why this topic matters." It is a specific description of where the 
 
 ---
 
-## SECTION 3 — CORE MENTAL MODEL
+## SECTION 3 — CORE MENTAL MODEL + DECISION RULE
 
-The organizing insight that frames the entire lesson.
+Two parts. Keep them short and sharp.
+
+**Part A — Mental model:** The organizing insight that frames the entire lesson.
 
 ```
 Rules:
@@ -232,6 +241,25 @@ Weight by type:
   Reliability:      MEDIUM — a mental model of the failure space
   Operations:       MEDIUM — a systems thinking frame
 ```
+
+**Part B — Decision rule:** One explicit rule for when to use this lesson's pattern — and when NOT to.
+
+```
+Format:
+  USE when:     [specific condition — not a vague "when appropriate"]
+  AVOID when:   [specific condition where this pattern breaks or is overkill]
+  SIGNAL:       [the observable sign that tells you which branch you're in]
+
+Example (Lesson 2.4 — temperature):
+  USE when:     output must be deterministic — classification, extraction, routing
+  AVOID when:   output benefits from variation — drafting, brainstorming, summarization
+  SIGNAL:       if you'd run the same input twice and expect the same output → temperature=0
+
+Bad (too vague): "Use temperature when you need to control randomness."
+Good: "If the task has a single correct answer, use temperature=0. If variety improves the output, use 0.7–1.0. Never leave it at the API default in production."
+```
+
+The decision rule is the thing a senior engineer would say in an interview when asked "when would you use this?" Write it as a rule you can defend, not as a description.
 
 ---
 
@@ -253,7 +281,7 @@ Strategy:        option A vs B → tradeoffs → when each wins → decision rul
 Operations:      process → how it breaks at scale → how to instrument → how to improve
 ```
 
-**Cognitive load rule:** Do not introduce more than 4–5 new ideas in a single concept block. If a concept has a subtopic that belongs to a later lesson, introduce it at the level needed now and note `(→ expanded in X.X)`.
+**Cognitive load rule:** Do not introduce more than **3 new concepts** per lesson. If a concept has a subtopic that belongs to a later lesson, introduce it at the level needed now and note `(→ expanded in X.X)`. If you find yourself needing 5 or 6 concepts, you have two lessons — split or defer.
 
 **Cross-lesson rule:** Concepts owned by another lesson get one sentence and a citation. Nothing more. Do not re-explain them.
 
@@ -353,9 +381,71 @@ Exercise types (pick 3–4 that fit the lesson):
 
 ---
 
-## SECTION 7 — DELIVERABLE
+## SECTION 7 — INTERVIEW DRILL
 
-One artifact. Specific, checkable, project-integrated.
+Three questions. No more. Designed to be answered out loud in under 2 minutes each.
+
+```
+Q1 — Concept question (what it is and why it works):
+     "Explain [this lesson's core concept] to a senior engineer in 90 seconds."
+     Write a model answer. 3–5 sentences. No filler.
+
+Q2 — System design question (how you'd apply it at scale):
+     A short scenario. The learner must choose an approach and defend it.
+     Example: "You have three endpoints with different accuracy vs. cost requirements.
+               How do you configure model parameters for each? What breaks if you get it wrong?"
+
+Q3 — Debugging question (what goes wrong and how you find it):
+     A broken output, a wrong metric, or a failed test.
+     The learner must diagnose the cause and name the fix.
+     Example: "Your /classify endpoint returns a different label on the same input 30% of the time.
+               What is the most likely cause and what is the first thing you check?"
+```
+
+**Rules:**
+- Q1 is always about the concept the lesson owns — not a referenced concept
+- Q2 must name a real architectural tradeoff — not a trick question
+- Q3 must be diagnosable from code the learner actually wrote in this lesson
+- Write the model answer for all three — the learner checks their answer against it
+
+**Why this is mandatory:** A learner who cannot answer these three questions after the lesson has not retained the material well enough to use it in an interview. Exercises build skill; interview drills build articulation.
+
+---
+
+## SECTION 8 — RETRIEVAL PACK
+
+Five recall questions for today. A spaced review schedule for later.
+
+```
+RECALL QUESTIONS (answer from memory — no scrolling back):
+  1. [Factual: name, definition, or value]
+  2. [Causal: why does X happen / what causes Y]
+  3. [Decision: in scenario Z, what would you do and why]
+  4. [Trap: what is the most common mistake with this concept]
+  5. [Transfer: how does this connect to [prior lesson concept]?]
+
+PRIOR LESSON LINKS (three concepts this lesson depends on):
+  → [concept name] (→ lesson X.X)
+  → [concept name] (→ lesson X.X)
+  → [concept name] (→ lesson X.X)
+
+SPACED REVIEW SCHEDULE:
+  D+1:  Re-answer questions 1 and 4 without looking at the lesson
+  D+3:  Re-answer questions 2 and 3 without looking at the lesson
+  D+7:  Answer all five from memory — if any fail, re-read only that concept block
+```
+
+**Rules:**
+- Questions must be answerable from the lesson content — no trivia
+- Question 5 must name a specific prior lesson (not "earlier concepts")
+- The D+1/D+3/D+7 plan is for the learner to schedule themselves — it is not optional reading
+- Do not write more than 5 questions. More questions = less retrieval = worse retention.
+
+---
+
+## SECTION 9 — DELIVERABLE
+
+One artifact. Specific, checkable, project-integrated. Three exit criteria that must all pass.
 
 ```
 Format: [filename or artifact] — [what it does] — [where it lives in the project]
@@ -365,6 +455,31 @@ Good:  "app/security/sanitizer.py — injection pattern detection and tool call
 
 Bad:   "A module for security."
 ```
+
+**Exit criteria — all three must be true before the lesson is done:**
+
+```
+FILE:    [specific file or artifact exists and is committed]
+TEST:    [specific test passes — name it]
+METRIC:  [one observable metric captured — what it is and where it appears]
+```
+
+Example (Lesson 2.4):
+```
+FILE:    app/config.py — LLMConfig class with task-based parameter sets
+TEST:    tests/integration/test_classify.py::test_determinism passes
+METRIC:  output_tokens logged per request — visible in ClassifyResponse
+```
+
+**One metric + one alert per lesson:**
+
+Every lesson must name:
+- **Metric:** one signal to measure that confirms the module is working correctly
+  (schema compliance rate, token count, tool-call success rate, first-token latency, cost per request, etc.)
+- **Alert condition:** the threshold or pattern that means something is wrong
+  (e.g., "if classification returns anything outside the four labels → alert", "if output_tokens > 50 on /classify → alert, prompt may have drifted")
+
+This is not optional. Observability is how senior engineers think — not a later concern.
 
 **Deliverable by lesson type:**
 
@@ -380,7 +495,7 @@ Operations:       Working operational component (versioning, caching, eval, etc.
 
 ---
 
-## SECTION 8 — KEY TAKEAWAYS
+## SECTION 10 — KEY TAKEAWAYS
 
 5–7 bullets. Engineering principles — not content summaries.
 
@@ -397,7 +512,62 @@ These are the insights the learner carries into the next lesson and into their w
 
 ---
 
-## SECTION 9 — OPTIONAL ADVANCED NOTES
+## SECTION 11 — QUICK REVIEW CARD
+
+A 2–3 minute read that covers the whole lesson. Written for someone who finished the lesson a week ago and wants to refresh before an interview or before building the next module. It must work as a standalone reference — no flipping back through the lesson to understand it.
+
+```
+Format rules:
+  - One line saying what the lesson is about
+  - Each concept: name + one plain-English sentence + the decision rule in plain language
+  - One table showing the key values, ranges, or options at a glance
+  - The single most important thing to remember (the "if you forget everything else" line)
+  - The exit criteria as a checklist
+  - No jargon without immediate plain explanation
+  - No paragraphs — only bullets, tables, and short lines
+  - Must fit in one screen (roughly 30–40 lines)
+```
+
+**What makes a good card:**
+- Someone can read it in 2–3 minutes and feel like they understand the lesson
+- It answers: what is this, when do I use it, what goes wrong, what did I build
+- It does NOT just copy the key takeaways — it restructures the whole lesson into a fast format
+
+**Example structure:**
+
+```
+## Quick Review Card — Lesson X.X: [Topic]
+
+**What this lesson is about in one line:**
+[Plain English. No jargon.]
+
+**Key concepts:**
+
+| Concept | What it is (plain English) | When to use it |
+|---|---|---|
+| ... | ... | ... |
+
+**The decision rules:**
+- Use [X] when: ...
+- Avoid [X] when: ...
+- The signal that tells you which: ...
+
+**What you built:**
+- [filename] — [what it does in one sentence]
+- Test: [test command] → [expected result]
+
+**If you forget everything else, remember:**
+[One sentence. The most important engineering principle from this lesson.]
+
+**Exit criteria:**
+- [ ] FILE: ...
+- [ ] TEST: ...
+- [ ] METRIC: ...
+```
+
+---
+
+## SECTION 12 — OPTIONAL ADVANCED NOTES
 
 Include only when ALL three conditions are true:
 1. The topic has important advanced behavior the learner will actually hit in production.
@@ -448,6 +618,10 @@ Step 4: Write Section 5 (Project Integration) first.
         Let the project component anchor the lesson before explaining concepts.
         The best lessons flow TOWARD the build — not away from it.
 
+Step 5.5: Write the Interview Drill (Section 7) before writing Section 4.
+          Knowing what you need to answer forces you to teach the right things.
+          If you can't write Q3 (the debug question), the lesson hasn't covered the failure mode.
+
 Step 5: Write the rest of the lesson.
         Follow the cognitive arc: Anchor → Build → Apply → Reinforce.
 ```
@@ -459,6 +633,10 @@ Step 5: Write the rest of the lesson.
 Run this before finalizing any lesson:
 
 ```
+Header
+  □ Scope Firewall is filled in with specific concepts in each bucket
+  □ "Must know now" concepts are the ONLY ones given full explanation
+
 Objective
   □ Uses a DO verb — not "understand" or "learn"
   □ Describes something verifiable
@@ -467,13 +645,17 @@ System Position
   □ References actual project state, not generic motivation
   □ The GAP is specific — something breaks without this lesson
 
-Mental Model
-  □ Is specific, not a generic platitude
-  □ Is referenced again in the concept section
+Mental Model + Decision Rule
+  □ Mental model is specific, not a generic platitude
+  □ Mental model is referenced again in the concept section
+  □ Decision rule has USE / AVOID / SIGNAL — not just "use when appropriate"
+  □ Decision rule is defensible in an interview
 
 Main Concepts
-  □ All roadmap-required concepts are covered
+  □ No more than 3 new concepts in the lesson
   □ No concept owned by another lesson is re-explained
+  □ Every concept follows: scenario → steps → name → implication → trap
+  □ No concept block opens with the concept name or a definition sentence
   □ Order follows cognitive dependency, not alphabet or importance
   □ Production reality is woven in, not appended
 
@@ -487,10 +669,25 @@ Practical Session
   □ Every exercise produces a verifiable output
   □ Exercises are tied to the project, not isolated toy examples
 
+Interview Drill
+  □ Q1 is a concept question the learner can answer in 90 seconds
+  □ Q2 is a system design scenario with a real tradeoff
+  □ Q3 is a debugging scenario diagnosable from lesson code
+  □ Model answers are written for all three
+
+Retrieval Pack
+  □ Exactly 5 recall questions — not more
+  □ Question 5 names a specific prior lesson
+  □ D+1 / D+3 / D+7 review schedule is included
+  □ All questions are answerable from lesson content
+
 Deliverable
   □ Specific (includes filename or artifact name)
   □ Checkable by someone else
   □ Project-integrated
+  □ Exit criteria: FILE + TEST + METRIC all named
+  □ One metric named with units or an observable output
+  □ One alert condition named (what threshold means something is wrong)
 
 Takeaways
   □ Written as engineering principles, not content summaries
