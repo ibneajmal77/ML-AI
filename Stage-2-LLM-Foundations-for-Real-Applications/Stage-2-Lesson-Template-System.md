@@ -168,6 +168,91 @@ Before reading the sections, understand the one rule that overrides everything:
 
 ---
 
+## WRITING STYLE RULES — APPLY TO EVERY WORD IN EVERY LESSON
+
+These rules apply everywhere — mental models, concept explanations, exercises, takeaways, the review card, everything. Technical depth must stay intact. The language must be simple.
+
+**The core rule: write like you're explaining to a smart person learning this for the first time.**
+
+---
+
+### Sentence rules
+
+- **One idea per sentence.** If a sentence has more than one clause connected by "—" or "which" or "and", split it.
+- **Short sentences by default.** If you can say it in 10 words instead of 20, use 10.
+- **Say "you" not "the learner" or "one".** Talk directly to the person reading.
+- **Active voice.** "Your code catches this" not "this must be caught by your application."
+
+**Before:**
+> "The engineering consequence of this architectural reality is that budget enforcement must happen inside your application, prior to the API call, with a deliberate truncation or rejection strategy defined in advance."
+
+**After:**
+> "This means your code needs to catch oversized prompts before they reach the API — not after. Have a plan for what happens when content is too long."
+
+---
+
+### Word rules
+
+Replace formal words with plain ones:
+
+| Instead of | Use |
+|---|---|
+| denominated in | measured in |
+| operationally | in practice / in production |
+| enforcement | check / rule / guard |
+| architectural | design / structural |
+| instantiate | create / set up |
+| allocate | give / assign |
+| subsequently | after that / then |
+| however | but |
+| utilize | use |
+| in order to | to |
+| it is important to note that | just say the thing |
+| this allows the learner to | you can now |
+
+---
+
+### Explanation rules
+
+- **Concrete before abstract.** Show the situation first, then name the concept.
+- **Say what to DO, not just what IS.** "Use `temperature=0` for classification" beats "temperature controls output variance."
+- **No hedging.** Don't write "it is worth noting that" or "one might consider." Just say it.
+- **No padding.** Don't open paragraphs with "In this section we will explore..." Just start.
+
+---
+
+### Structure rules
+
+- Use bullet points and tables instead of long paragraphs wherever possible.
+- Bold the rule or the key point — not random words.
+- Code blocks for all code. Never inline multi-line code in prose.
+- When listing steps, use a numbered list. When listing options, use bullets.
+
+---
+
+### Writing checklist — run this before finishing any lesson
+
+```
+Language
+  □ No sentence longer than 25 words (split if over)
+  □ No formal words from the replacement table above
+  □ "You" language throughout — not passive, not third person
+  □ Every paragraph starts with the point, not with setup
+
+Explanations
+  □ Every concept opens with a concrete situation, not a definition
+  □ Every rule says what to DO, not just what IS
+  □ No hedging phrases ("it is worth noting", "one might")
+  □ No filler opening lines ("In this section...")
+
+Structure
+  □ Long prose replaced with bullets or tables where possible
+  □ Steps are numbered, options are bulleted
+  □ Code is in code blocks, never inline paragraphs
+```
+
+---
+
 ## LESSON HEADER
 
 ```
@@ -692,6 +777,16 @@ Deliverable
 Takeaways
   □ Written as engineering principles, not content summaries
   □ No takeaway simply restates a Section 4 explanation
+
+Language and Style
+  □ No sentence longer than ~25 words — split any that are
+  □ No formal words (denominated, operationally, enforcement, instantiate, etc.)
+  □ "You" language throughout — not passive voice, not third person
+  □ Every concept opens with a concrete situation, not a definition
+  □ Every rule says what to DO, not just what IS
+  □ No hedging phrases ("it is worth noting", "one might consider")
+  □ No filler opening lines ("In this section we will explore...")
+  □ Long prose replaced with bullets or tables where possible
 
 Overall
   □ No section repeats what another section already said
