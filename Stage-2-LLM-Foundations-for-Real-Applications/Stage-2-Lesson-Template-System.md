@@ -172,35 +172,58 @@ Before reading the sections, understand the one rule that overrides everything:
 
 These rules apply everywhere — mental models, concept explanations, exercises, takeaways, the review card, everything. Technical depth must stay intact. The language must be simple.
 
-**The core rule: write like you're explaining to a smart person learning this for the first time.**
+**The core rule: write like you're explaining to a programmer who has never used an LLM API before. They can read code. They understand systems. They just don't know this yet.**
+
+**Before writing any section, ask: could someone with basic programming knowledge but no LLM experience read this sentence without re-reading it?** If not, split it and swap the formal words.
+
+---
+
+### Rule hierarchy — what can and cannot be broken
+
+Some rules are hard constraints. They exist because violating them directly harms learning. Others are defaults that can be adjusted when there is a genuine reason.
+
+```
+HARD CONSTRAINTS — never break these:
+  - Every concept opens with a scenario, not a definition
+  - No sentence longer than 25 words
+  - "You" language throughout — no passive, no third person
+  - No concept owned by another lesson is re-explained
+  - Scope Firewall must be filled in
+  - Exit criteria must include FILE + TEST + METRIC
+
+DEFAULTS — break only with a stated reason:
+  - Section ordering (merge sections if they flow better that way)
+  - Number of exercises (3 minimum, 4 is normal)
+  - Section length (match lesson type weight)
+```
 
 ---
 
 ### Sentence rules
 
-- **One idea per sentence.** If a sentence has more than one clause connected by "—" or "which" or "and", split it.
-- **Short sentences by default.** If you can say it in 10 words instead of 20, use 10.
-- **Say "you" not "the learner" or "one".** Talk directly to the person reading.
+- **One idea per sentence.** Split any sentence with more than one clause joined by "—", "which", or "and".
+- **Max 25 words per sentence.** Count if unsure — split anything longer.
+- **Say "you", not "the learner" or "one".** Talk directly to the person reading.
 - **Active voice.** "Your code catches this" not "this must be caught by your application."
 
 **Before:**
 > "The engineering consequence of this architectural reality is that budget enforcement must happen inside your application, prior to the API call, with a deliberate truncation or rejection strategy defined in advance."
 
 **After:**
-> "This means your code needs to catch oversized prompts before they reach the API — not after. Have a plan for what happens when content is too long."
+> "Your code needs to catch oversized prompts before they reach the API — not after. Have a plan for what happens when content is too long."
 
 ---
 
 ### Word rules
 
-Replace formal words with plain ones:
+**Table A — Formal words: replace with plain ones**
 
 | Instead of | Use |
 |---|---|
 | denominated in | measured in |
 | operationally | in practice / in production |
-| enforcement | check / rule / guard |
-| architectural | design / structural |
+| enforce / enforcement | check / guard / stop |
+| architectural | design |
 | instantiate | create / set up |
 | allocate | give / assign |
 | subsequently | after that / then |
@@ -209,6 +232,19 @@ Replace formal words with plain ones:
 | in order to | to |
 | it is important to note that | just say the thing |
 | this allows the learner to | you can now |
+| attends most strongly to | pays most attention to |
+| extraneous load | wasted effort |
+| cognitive budget | mental energy |
+| pattern continuation | keeps writing the same pattern |
+
+**Table B — Concept names: introduce AFTER the scenario, never before**
+
+These words are not wrong — they just must not appear before the learner has seen the concept in action:
+
+| Word | Rule |
+|---|---|
+| Any named concept (temperature, attention, tokenization...) | Show the scenario first. Name the concept after. |
+| Academic section titles ("The X Frame", "Y Mechanics") | Don't name your mental model like a textbook chapter. Describe what the concept does. |
 
 ---
 
@@ -216,8 +252,9 @@ Replace formal words with plain ones:
 
 - **Concrete before abstract.** Show the situation first, then name the concept.
 - **Say what to DO, not just what IS.** "Use `temperature=0` for classification" beats "temperature controls output variance."
-- **No hedging.** Don't write "it is worth noting that" or "one might consider." Just say it.
-- **No padding.** Don't open paragraphs with "In this section we will explore..." Just start.
+- **No hedging.** Don't write "it is worth noting that" or "one might consider." Say it directly.
+- **No padding.** Don't open with "In this section we will explore..." Just start.
+- **No academic section titles.** Name your mental model by what it does, not by what it would be called in a paper or textbook.
 
 ---
 
@@ -235,15 +272,17 @@ Replace formal words with plain ones:
 ```
 Language
   □ No sentence longer than 25 words (split if over)
-  □ No formal words from the replacement table above
+  □ No formal words from Table A above
   □ "You" language throughout — not passive, not third person
   □ Every paragraph starts with the point, not with setup
 
 Explanations
   □ Every concept opens with a concrete situation, not a definition
+  □ Concept name appears AFTER the scenario, not before
   □ Every rule says what to DO, not just what IS
   □ No hedging phrases ("it is worth noting", "one might")
   □ No filler opening lines ("In this section...")
+  □ No academic section titles or names for mental models
 
 Structure
   □ Long prose replaced with bullets or tables where possible
@@ -334,15 +373,17 @@ Format:
   USE when:     [specific condition — not a vague "when appropriate"]
   AVOID when:   [specific condition where this pattern breaks or is overkill]
   SIGNAL:       [the observable sign that tells you which branch you're in]
-
-Example (Lesson 2.4 — temperature):
-  USE when:     output must be deterministic — classification, extraction, routing
-  AVOID when:   output benefits from variation — drafting, brainstorming, summarization
-  SIGNAL:       if you'd run the same input twice and expect the same output → temperature=0
-
-Bad (too vague): "Use temperature when you need to control randomness."
-Good: "If the task has a single correct answer, use temperature=0. If variety improves the output, use 0.7–1.0. Never leave it at the API default in production."
 ```
+
+**Illustration — one valid form, not the only form:**
+```
+USE when:     output must be deterministic — classification, extraction, routing
+AVOID when:   output benefits from variation — drafting, brainstorming, summarization
+SIGNAL:       if you'd run the same input twice and expect the same output → use low temperature
+```
+
+**Bad (too vague):** "Use this when you need to control the output."
+**Good:** "If the task has one correct answer, use the low-variance setting. If variety is fine or useful, use the high-variance setting. Never leave it at the API default in production."
 
 The decision rule is the thing a senior engineer would say in an interview when asked "when would you use this?" Write it as a rule you can defend, not as a description.
 
@@ -356,14 +397,16 @@ Production reality is woven in, not separated into its own section.
 
 **Per-concept approach by lesson type:**
 
+This table describes what the CONTENT of each concept covers. It does not replace the universal opening format (scenario → steps → name → implication → trap — defined in the Concept Explanation Format section below). Every concept in every lesson type opens with a scenario. What happens after the opening depends on the lesson type.
+
 ```
-Foundation:      concept → what it explains about LLM behavior → engineering consequence
-Configuration:   what the parameter does → effect on output → when to use → failure risk
-Prompt Eng.:     pattern name → when to apply → before/after example → common trap
-Implementation:  problem it solves → implementation pattern → edge cases → production reality
-Reliability:     failure mode → why it happens → how to detect → how to mitigate
-Strategy:        option A vs B → tradeoffs → when each wins → decision rule
-Operations:      process → how it breaks at scale → how to instrument → how to improve
+Foundation:      scenario → what it explains about LLM behavior → engineering consequence
+Configuration:   scenario → what the parameter does → effect on output → when to use → failure risk
+Prompt Eng.:     scenario → when to apply → before/after example → common trap
+Implementation:  scenario → problem it solves → implementation pattern → edge cases → production reality
+Reliability:     scenario → why the failure happens → how to detect → how to mitigate
+Strategy:        scenario → option A vs B → tradeoffs → when each wins → decision rule
+Operations:      scenario → how the process breaks at scale → how to instrument → how to improve
 ```
 
 **Cognitive load rule:** Do not introduce more than **3 new concepts** per lesson. If a concept has a subtopic that belongs to a later lesson, introduce it at the level needed now and note `(→ expanded in X.X)`. If you find yourself needing 5 or 6 concepts, you have two lessons — split or defer.
@@ -374,50 +417,51 @@ Operations:      process → how it breaks at scale → how to instrument → ho
 
 ## CONCEPT EXPLANATION FORMAT — applies inside every concept block in Section 4
 
-Human working memory is limited. Every concept explanation must minimize extraneous load (wasted effort parsing the format) so the learner's cognitive budget goes toward forming the concept, not decoding the prose.
+People remember things they've seen in action — not things they've been told about. Every concept explanation follows the same sequence so the learner understands the concept before they're asked to name it.
 
-**The required sequence for every concept:**
+**The required sequence for every concept — this is a hard constraint:**
 
 ```
-1. SCENARIO — one sentence, concrete situation the learner can picture immediately
+1. SCENARIO — one sentence. A concrete situation the learner can picture right now.
    No jargon. No concept name yet. Just the situation.
    Example: "You build a support bot. A user asks: 'Why is my payment failing?'"
 
-2. WHAT HAPPENS — numbered steps or arrow chains, one line each
+2. WHAT HAPPENS — numbered steps or arrow chains, one line each.
    Walk through the mechanism as a visible sequence.
-   Use → to show flow, | to separate parallel things.
+   Use → to show flow.
    Example:
-     1. "payment failing" → mapped to meaning space
-     2. clusters nearby: billing, error, transaction
-     3. model focuses on "payment" + "failing", ignores filler
-     4. generates response from that focused context
+     1. "payment failing" → the model maps this to related words
+     2. nearby words: billing, error, transaction
+     3. model focuses on "payment" + "failing", ignores filler words
+     4. generates a response from that focused context
 
-3. NAME — introduce the concept label after the learner has seen it work
-   "This step-3 focusing process is called attention."
+3. NAME — introduce the concept label after the learner has seen it work.
+   "This focusing process is called attention."
    The name lands on understanding, not in front of it.
 
-4. ENGINEERING IMPLICATION — 2–3 bullets, not a paragraph
-   What does this mean for how you build or design?
+4. ENGINEERING IMPLICATION — 2–3 bullets, not a paragraph.
+   What does this mean for how you build?
    Use a direct comparison where possible:
-     50 policies in context  →  attention diluted  →  bad result
-     5 relevant docs only    →  attention focused  →  strong result
+     50 policy docs in context  →  attention spread thin  →  weak answers
+     5 relevant docs only       →  attention focused      →  strong answers
 
-5. COMMON TRAP — one line
+5. COMMON TRAP — one sentence (label it "Common trap:").
    The single most frequent mistake with this concept.
-   Example: "Assuming more context always helps — it doesn't if it's irrelevant."
+   Maximum two sentences if the trap needs a brief explanation.
+   Example: "Common trap: assuming more context always helps. It doesn't — irrelevant context dilutes attention."
 ```
 
 **What this forbids:**
 - Opening a concept with the concept name or a definition sentence before any scenario
-- Paragraphs longer than 3 sentences without a structural break (bullets, steps, table, code)
+- Paragraphs longer than 3 sentences without a break (bullets, steps, table, or code)
 - Abstract explanation before concrete example — always concrete first
 
 **What this applies to:**
 All concept explanations in Section 4, across all lesson types.
-The scenario and steps adapt to the lesson type — a Foundation lesson shows a system behavior, an Implementation lesson shows a failure case, a Prompt Engineering lesson shows a before/after prompt — but the sequence is always: scenario → steps → name → implication → trap.
+The scenario adapts to the lesson type — a Foundation lesson shows LLM behavior, an Implementation lesson shows a failure case, a Prompt Engineering lesson shows a before/after prompt — but the sequence is always: scenario → steps → name → implication → trap.
 
 **What this does NOT apply to:**
-Section 5 (Project Integration skeletons), Section 6 (exercise instructions), Section 8 (Key Takeaways).
+Section 5 (Project Integration), Section 6 (Practical Session), Section 10 (Key Takeaways).
 Those sections have their own format rules.
 
 ---
@@ -668,12 +712,36 @@ Keep it short. This is a footnote, not a second lesson.
 
 ---
 
+## CANONICAL SECTION ORDER
+
+The following order is the default for all lessons. Do not deviate without a stated reason.
+
+```
+§1   Objective
+§2   Where This Fits in the System
+§3   Core Mental Model + Decision Rule
+§4   Main Concepts + Production Reality
+§5   Project Integration
+§6   Practical Session
+§7   Interview Drill
+§8   Retrieval Pack
+§9   Deliverable
+§10  Key Takeaways
+§11  Quick Review Card
+§12  Optional Advanced Notes  (only if all three inclusion conditions are met)
+```
+
+**Why Key Takeaways (§10) comes before Quick Review Card (§11):**
+Key Takeaways are principles the learner carries into the next lesson — they close the learning arc. The Quick Review Card is a reference for when they come back later. Principles first, reference second.
+
+---
+
 ## FLEXIBILITY CLAUSE
 
 The template is scaffolding, not a constraint.
 
 If two sections merge more cleanly than staying separate — merge them.
-If the cognitive arc needs a different order for a specific lesson — reorder.
+If the cognitive arc needs a different order for a specific lesson — reorder, but note why.
 If strict compliance produces mechanical writing — break compliance.
 
 The purpose of this template is:
@@ -682,8 +750,7 @@ The purpose of this template is:
 3. Keep the project as the spine.
 4. Make the learner better at engineering, not better at reading.
 
-If the template serves all four — follow it.
-If part of it doesn't — drop that part and keep the goal.
+The hard constraints listed in the Rule Hierarchy cannot be broken under the Flexibility Clause. Everything else can be adjusted with a good reason.
 
 ---
 
@@ -703,11 +770,11 @@ Step 4: Write Section 5 (Project Integration) first.
         Let the project component anchor the lesson before explaining concepts.
         The best lessons flow TOWARD the build — not away from it.
 
-Step 5.5: Write the Interview Drill (Section 7) before writing Section 4.
-          Knowing what you need to answer forces you to teach the right things.
-          If you can't write Q3 (the debug question), the lesson hasn't covered the failure mode.
+Step 5: Write the Interview Drill (Section 7) before writing Section 4.
+        Knowing what you need to answer forces you to teach the right things.
+        If you can't write Q3 (the debug question), the lesson hasn't covered the failure mode yet.
 
-Step 5: Write the rest of the lesson.
+Step 6: Write the rest of the lesson.
         Follow the cognitive arc: Anchor → Build → Apply → Reinforce.
 ```
 
@@ -715,81 +782,89 @@ Step 5: Write the rest of the lesson.
 
 ## QUALITY CHECKLIST
 
-Run this before finalizing any lesson:
+Run this before finalizing any lesson. Items marked [HARD] cannot be waived under the Flexibility Clause.
 
 ```
 Header
-  □ Scope Firewall is filled in with specific concepts in each bucket
-  □ "Must know now" concepts are the ONLY ones given full explanation
+  □ [HARD] Scope Firewall is filled in with specific concepts in all three buckets
+  □ [HARD] "Must know now" concepts are the ONLY ones given full explanation
+  □        Header uses the Field: label format (not bold markdown)
 
 Objective
-  □ Uses a DO verb — not "understand" or "learn"
-  □ Describes something verifiable
+  □ [HARD] Uses a DO verb — not "understand" or "learn"
+  □        Describes something verifiable and specific
 
 System Position
-  □ References actual project state, not generic motivation
-  □ The GAP is specific — something breaks without this lesson
+  □        References actual project state — specific files, not generic motivation
+  □        The GAP is specific — something breaks or is impossible without this lesson
 
 Mental Model + Decision Rule
-  □ Mental model is specific, not a generic platitude
-  □ Mental model is referenced again in the concept section
-  □ Decision rule has USE / AVOID / SIGNAL — not just "use when appropriate"
-  □ Decision rule is defensible in an interview
+  □        Mental model explains WHY, not just WHAT
+  □        Mental model is referenced again in the concept section (not dropped after the intro)
+  □        Decision rule has USE / AVOID / SIGNAL — not just "use when appropriate"
+  □        Decision rule is defensible in an interview
 
 Main Concepts
-  □ No more than 3 new concepts in the lesson
-  □ No concept owned by another lesson is re-explained
-  □ Every concept follows: scenario → steps → name → implication → trap
-  □ No concept block opens with the concept name or a definition sentence
-  □ Order follows cognitive dependency, not alphabet or importance
-  □ Production reality is woven in, not appended
+  □ [HARD] No more than 3 new concepts in the lesson
+  □ [HARD] No concept owned by another lesson is re-explained — one sentence + citation only
+  □ [HARD] Every concept opens with a scenario, not a definition or concept name
+  □        Every concept follows: scenario → steps → name → implication → trap
+  □        Concepts are ordered by cognitive dependency, not alphabet or importance
+  □        Production reality is woven in, not appended as a separate block
 
 Project Integration
-  □ Includes a concrete skeleton or scaffold
-  □ The deliverable stays in the project (not throwaway code)
-  □ Connects clearly to what was built before and what comes next
+  □        Includes a concrete skeleton or scaffold — not left for the learner to guess
+  □        The deliverable stays in the project (not throwaway code)
+  □        Connects clearly to what was built before and what comes next
 
 Practical Session
-  □ At least one exercise involves a failure or edge case
-  □ Every exercise produces a verifiable output
-  □ Exercises are tied to the project, not isolated toy examples
+  □        At least one exercise involves a failure, edge case, or broken scenario
+  □        Every exercise produces a verifiable output (file, log, printed result)
+  □        Exercises are tied to the project, not isolated toy examples
 
 Interview Drill
-  □ Q1 is a concept question the learner can answer in 90 seconds
-  □ Q2 is a system design scenario with a real tradeoff
-  □ Q3 is a debugging scenario diagnosable from lesson code
-  □ Model answers are written for all three
+  □        Q1 is a concept question the learner can answer in 90 seconds
+  □        Q2 is a system design scenario with a real tradeoff
+  □        Q3 is a debugging scenario diagnosable from code written in this lesson
+  □        Model answers are written for all three questions
 
 Retrieval Pack
-  □ Exactly 5 recall questions — not more
-  □ Question 5 names a specific prior lesson
-  □ D+1 / D+3 / D+7 review schedule is included
-  □ All questions are answerable from lesson content
+  □        Exactly 5 recall questions — not more, not fewer
+  □        Question 5 names a specific prior lesson by number
+  □        Three prior lesson links are listed
+  □        D+1 / D+3 / D+7 review schedule is included
 
 Deliverable
-  □ Specific (includes filename or artifact name)
-  □ Checkable by someone else
-  □ Project-integrated
-  □ Exit criteria: FILE + TEST + METRIC all named
-  □ One metric named with units or an observable output
-  □ One alert condition named (what threshold means something is wrong)
+  □ [HARD] Exit criteria: FILE + TEST + METRIC all named specifically
+  □        One metric named with an observable output or unit
+  □        One alert condition named (what threshold means something is wrong)
+  □        Artifact name is specific — filename, not "a module"
 
-Takeaways
-  □ Written as engineering principles, not content summaries
-  □ No takeaway simply restates a Section 4 explanation
+Key Takeaways (§10)
+  □        Written as engineering principles — what to DO, not what something IS
+  □        No takeaway simply restates a concept explanation from §4
+
+Quick Review Card (§11)
+  □        Works as a standalone reference — no flipping back through the lesson to understand it
+  □        Includes concept table, decision rules, what you built, exit checklist
+  □        Fits in one screen (~30–40 lines)
 
 Language and Style
-  □ No sentence longer than ~25 words — split any that are
-  □ No formal words (denominated, operationally, enforcement, instantiate, etc.)
-  □ "You" language throughout — not passive voice, not third person
-  □ Every concept opens with a concrete situation, not a definition
-  □ Every rule says what to DO, not just what IS
-  □ No hedging phrases ("it is worth noting", "one might consider")
-  □ No filler opening lines ("In this section we will explore...")
-  □ Long prose replaced with bullets or tables where possible
+  □ [HARD] No sentence longer than 25 words — split any that are
+  □ [HARD] No concept name appears before its scenario
+  □        No formal words from Table A in the Word Rules section
+  □        "You" language throughout — not passive voice, not third person
+  □        Every rule says what to DO, not just what IS
+  □        No hedging phrases ("it is worth noting", "one might consider")
+  □        No filler opening lines ("In this section we will explore...")
+  □        No academic section titles or names for mental models
+  □        Long prose replaced with bullets or tables where possible
+
+Section Order
+  □        Sections appear in canonical order (§1–§12) or deviation is noted with a reason
 
 Overall
-  □ No section repeats what another section already said
-  □ Reading order makes each concept easier after the previous one
-  □ Length is appropriate for the lesson type
+  □        No section repeats what another section already said
+  □        Reading order makes each concept easier after the previous one
+  □        Length matches lesson type weight (Foundation = heavy, Configuration = light, etc.)
 ```
