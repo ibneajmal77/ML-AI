@@ -20,6 +20,7 @@ def extract_ticket(ticket_text: str, max_retries: int = 3) -> ExtractResponse:
                 {"role": "user", "content": prompt.render_user_message(ticket_text)},
             ],
             config,
+            task="extraction",
         )
         try:
             payload = parse_json_content(result)

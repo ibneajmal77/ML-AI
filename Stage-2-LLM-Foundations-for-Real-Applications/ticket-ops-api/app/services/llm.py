@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import time
 from dataclasses import dataclass
 from typing import Protocol
@@ -9,6 +10,9 @@ from openai import APIError, OpenAI, RateLimitError
 
 from app.config import LLMConfig, settings
 from app.utils.tokens import count_messages_tokens, count_tokens
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -25,6 +29,11 @@ class LLMBackend(Protocol):
 
 class OpenAIBackend:
     def __init__(self) -> None:
+        if not settings.openai_api_key:
+            raise RuntimeError(
+                "OPENAI_API_KEY is required for live model calls. "
+                "Tests should inject a fake backend before calling the LLM service."
+            )
         self._client = OpenAI(api_key=settings.openai_api_key)
 
     def chat(self, messages: list[dict], config: LLMConfig) -> ChatResult:
@@ -64,23 +73,43 @@ def set_backend(backend: LLMBackend | None) -> None:
     _backend = backend
 
 
-def chat(messages: list[dict], config: LLMConfig) -> ChatResult:
-    return get_backend().chat(messages, config)
+def _log_usage(result: ChatResult, task: str | None) -> None:
+    logger.info(
+        "llm_call task=%s model=%s prompt_tokens=%s completion_tokens=%s",
+        task or "unknown",
+        result.model,
+        result.input_tokens,
+        result.output_tokens,
+    )
+
+
+def chat(messages: list[dict], config: LLMConfig, *, task: str | None = None) -> ChatResult:
+    result = get_backend().chat(messages, config)
+    _log_usage(result, task)
+    return result
 
 
 def chat_with_retry(
     messages: list[dict],
     config: LLMConfig,
     max_retries: int = 3,
+    *,
+    task: str | None = None,
 ) -> ChatResult:
     attempt = 0
     while True:
         try:
-            return chat(messages, config)
-        except RateLimitError:
+            return chat(messages, config, task=task)
+        except RateLimitError as exc:
             attempt += 1
             if attempt > max_retries:
                 raise
+            logger.warning(
+                "rate_limit_retry task=%s attempt=%s error=%s",
+                task or "unknown",
+                attempt,
+                exc.__class__.__name__,
+            )
             time.sleep(2 ** (attempt - 1))
         except APIError:
             raise

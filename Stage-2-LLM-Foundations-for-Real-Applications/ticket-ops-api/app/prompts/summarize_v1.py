@@ -7,7 +7,7 @@ register(
     PromptVersion(
         name="summarize",
         version="v1",
-        system_prompt=get_system_prompt("summarize"),
+        system_prompt=get_system_prompt("summarization"),
         render_user_message=summarize_user_message,
     )
 )

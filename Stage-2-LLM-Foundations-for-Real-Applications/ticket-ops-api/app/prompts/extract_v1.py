@@ -7,7 +7,7 @@ register(
     PromptVersion(
         name="extract",
         version="v1",
-        system_prompt=get_system_prompt("extract"),
+        system_prompt=get_system_prompt("extraction"),
         render_user_message=extract_user_message,
     )
 )

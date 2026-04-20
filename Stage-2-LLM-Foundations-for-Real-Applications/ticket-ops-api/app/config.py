@@ -6,7 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    openai_api_key: str = "test-key"
+    openai_api_key: str = ""
     model: str = "gpt-4o-mini"
     strong_model: str = "gpt-4o"
     context_limit: int = 128_000
@@ -33,7 +33,7 @@ TASK_CONFIGS: dict[str, LLMConfig] = {
         temperature=0.0,
         top_p=1.0,
         max_tokens=20,
-        stop=["\n", "."],
+        stop=["\n"],
     ),
     "extraction": LLMConfig(
         temperature=0.0,

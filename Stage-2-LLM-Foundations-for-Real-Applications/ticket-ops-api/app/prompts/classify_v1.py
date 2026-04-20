@@ -7,7 +7,7 @@ register(
     PromptVersion(
         name="classify",
         version="v1",
-        system_prompt=get_system_prompt("classify"),
+        system_prompt=get_system_prompt("classification"),
         render_user_message=classify_user_message,
     )
 )

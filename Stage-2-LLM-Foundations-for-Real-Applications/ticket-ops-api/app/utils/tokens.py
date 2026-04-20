@@ -4,6 +4,8 @@ from dataclasses import dataclass
 
 import tiktoken
 
+from app.config import settings
+
 
 _ENCODING_CACHE: dict[str, tiktoken.Encoding] = {}
 
@@ -37,7 +39,14 @@ def fits_in_budget(text: str, budget: int, model: str = "gpt-4o") -> bool:
     return count_tokens(text, model=model) <= budget
 
 
-def max_input_tokens(context_limit: int, output_reserve: int) -> int:
+def max_input_tokens(
+    context_limit: int | None = None,
+    output_reserve: int | None = None,
+) -> int:
+    if context_limit is None:
+        context_limit = settings.context_limit
+    if output_reserve is None:
+        output_reserve = settings.output_reserve
     return context_limit - output_reserve
 
 
@@ -85,6 +94,10 @@ class TokenBudget:
     @property
     def total(self) -> int:
         return self.input_total + self.output_reserve
+
+    @property
+    def content_remaining(self) -> int:
+        return self.context_limit - self.total
 
     def is_valid(self) -> bool:
         return self.total <= self.context_limit

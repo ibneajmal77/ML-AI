@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Callable
 
@@ -18,6 +19,13 @@ class PromptVersion:
 _REGISTRY: dict[tuple[str, str], PromptVersion] = {}
 
 
+def _version_sort_key(version: str) -> tuple[int, int | str]:
+    match = re.fullmatch(r"v(\d+)", version)
+    if match:
+        return (0, int(match.group(1)))
+    return (1, version)
+
+
 def register(prompt: PromptVersion) -> None:
     _REGISTRY[(prompt.name, prompt.version)] = prompt
 
@@ -33,4 +41,4 @@ def latest(name: str) -> PromptVersion:
     matches = [prompt for (prompt_name, _), prompt in _REGISTRY.items() if prompt_name == name]
     if not matches:
         raise KeyError(f"No prompt registered for {name!r}")
-    return sorted(matches, key=lambda prompt: prompt.version)[-1]
+    return sorted(matches, key=lambda prompt: _version_sort_key(prompt.version))[-1]

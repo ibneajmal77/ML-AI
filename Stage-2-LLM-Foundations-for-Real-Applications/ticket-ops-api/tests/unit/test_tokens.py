@@ -1,4 +1,11 @@
-from app.utils.tokens import TokenBudget, count_tokens, fits_in_budget, truncate_to_token_budget
+from app.config import settings
+from app.utils.tokens import (
+    TokenBudget,
+    count_tokens,
+    fits_in_budget,
+    max_input_tokens,
+    truncate_to_token_budget,
+)
 
 
 def test_count_tokens_basic() -> None:
@@ -40,6 +47,7 @@ def test_token_budget_valid() -> None:
     )
     assert budget.is_valid() is True
     assert budget.total == 3_600
+    assert budget.content_remaining == 124_400
 
 
 def test_token_budget_invalid() -> None:
@@ -51,3 +59,7 @@ def test_token_budget_invalid() -> None:
         content=200,
     )
     assert budget.is_valid() is False
+
+
+def test_max_input_tokens_matches_settings_defaults() -> None:
+    assert max_input_tokens() == settings.context_limit - settings.output_reserve

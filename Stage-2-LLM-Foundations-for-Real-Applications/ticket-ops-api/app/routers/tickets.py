@@ -13,7 +13,7 @@ router = APIRouter(tags=["tickets"])
 
 
 def _validate_budget(text: str) -> None:
-    if not fits_in_budget(text, settings.max_ticket_input_tokens):
+    if not fits_in_budget(text, settings.max_ticket_input_tokens, model=settings.model):
         raise HTTPException(
             status_code=422,
             detail=(

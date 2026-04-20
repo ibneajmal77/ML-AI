@@ -19,6 +19,7 @@ def classify_ticket(ticket_text: str) -> ClassifyResponse:
             {"role": "user", "content": prompt.render_user_message(ticket_text)},
         ],
         config,
+        task="classification",
     )
     label = result.content.strip().lower()
     if label not in VALID_LABELS:

@@ -11,8 +11,8 @@ and live `/classify` and `/extract` endpoints.
 - Lesson `2.2`: `docs/architecture-notes.md`
 - Lesson `2.3`: `app/utils/tokens.py`
 - Lesson `2.4`: `app/config.py`, `app/services/llm.py`, `/classify`
-- Lesson `2.5`: prompt template builders and structured extraction flow
-- Lesson `2.6`: system prompt builder, prompt registry, versioned prompts
+- Lesson `2.5`: `app/prompts/templates.py`, structured extraction flow
+- Lesson `2.6`: `app/prompts/system.py`, prompt registry, versioned prompts
 
 ## Endpoints
 
@@ -32,3 +32,9 @@ pytest
 
 Set `OPENAI_API_KEY` in `.env` if you want live model calls. Tests run with a fake
 backend and do not require network access.
+
+To refresh the prompt budget reference table after prompt edits:
+
+```bash
+python scripts/measure_prompt_tokens.py
+```

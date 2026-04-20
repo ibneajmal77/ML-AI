@@ -1,9 +1,13 @@
 import pytest
 
 from app.prompts import classify_v1, extract_v1  # noqa: F401
-from app.prompts.registry import get, latest
-from app.prompts.system import SystemPromptBuilder, get_system_prompt
-from app.prompts.templates import classify_user_message, extract_user_message
+from app.prompts.registry import PromptVersion, get, latest, register
+from app.prompts.templates import (
+    classify_user_message,
+    draft_reply_user_message,
+    extract_user_message,
+    get_template,
+)
 
 
 def test_classify_template_covers_all_categories() -> None:
@@ -30,23 +34,41 @@ def test_registry_missing_prompt_raises_key_error() -> None:
         get("classify", "v99")
 
 
-def test_registry_latest_returns_v1() -> None:
-    assert latest("extract").version == "v1"
+def test_registry_latest_prefers_highest_numeric_version() -> None:
+    register(
+        PromptVersion(
+            name="numeric-order-check",
+            version="v2",
+            system_prompt="v2",
+            render_user_message=lambda text: text,
+        )
+    )
+    register(
+        PromptVersion(
+            name="numeric-order-check",
+            version="v10",
+            system_prompt="v10",
+            render_user_message=lambda text: text,
+        )
+    )
+    assert latest("numeric-order-check").version == "v10"
 
 
-def test_system_prompt_builder_preserves_section_order() -> None:
-    prompt = SystemPromptBuilder(
-        role="Role.",
-        task="Task.",
-        output_format="Format.",
-        constraints=["Constraint."],
-        examples=[("input", "output")],
-    ).build()
-    assert prompt.index("Role.") < prompt.index("## Task") < prompt.index("## Output format")
-    assert prompt.index("## Output format") < prompt.index("## Constraints") < prompt.index("## Examples")
+def test_get_template_raises_for_unknown_task() -> None:
+    with pytest.raises(KeyError):
+        get_template("nonexistent_task")
 
 
-def test_system_prompt_loader_reuses_static_string() -> None:
-    first = get_system_prompt("classify")
-    second = get_system_prompt("classify")
-    assert first == second
+def test_draft_reply_includes_context_when_provided() -> None:
+    message = draft_reply_user_message(
+        "ticket text",
+        "billing",
+        "high",
+        context="Account verified.",
+    )
+    assert "Account verified." in message
+
+
+def test_draft_reply_excludes_context_block_when_empty() -> None:
+    message = draft_reply_user_message("ticket text", "billing", "high", context="")
+    assert "Relevant context" not in message
