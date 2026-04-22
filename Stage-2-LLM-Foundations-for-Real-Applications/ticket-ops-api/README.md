@@ -1,9 +1,9 @@
 # ticket-ops-api
 
-`ticket-ops-api` is a FastAPI project that turns Stage 2 lessons `2.1` through `2.6`
+`ticket-ops-api` is a FastAPI project that turns Stage 2 lessons `2.1` through `2.8`
 into working artifacts. The repo includes architecture documents, token budgeting
 utilities, task-based model configuration, production-style prompt infrastructure,
-and live `/classify` and `/extract` endpoints.
+schema-validated extraction, and a tool-backed routing endpoint.
 
 ## What Is Implemented
 
@@ -13,14 +13,18 @@ and live `/classify` and `/extract` endpoints.
 - Lesson `2.4`: `app/config.py`, `app/services/llm.py`, `/classify`
 - Lesson `2.5`: `app/prompts/templates.py`, structured extraction flow
 - Lesson `2.6`: `app/prompts/system.py`, prompt registry, versioned prompts
+- Lesson `2.7`: JSON-mode schema validation and retry-backed extraction
+- Lesson `2.8`: `app/tools/*`, `app/services/route.py`, `/route`
 
 ## Endpoints
 
 - `GET /health`
 - `POST /classify`
 - `POST /extract`
+- `POST /route`
 - `POST /tickets/classify`
 - `POST /tickets/extract`
+- `POST /tickets/route`
 
 ## Run Locally
 

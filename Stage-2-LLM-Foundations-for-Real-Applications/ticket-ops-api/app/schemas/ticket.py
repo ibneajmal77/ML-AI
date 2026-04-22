@@ -37,3 +37,22 @@ class ExtractResponse(BaseModel):
     input_tokens: int
     output_tokens: int
     prompt_version: str
+
+
+class RouteRequest(BaseModel):
+    text: str = Field(min_length=1, max_length=20_000)
+
+
+class RouteDecision(BaseModel):
+    assigned_team: Literal["billing", "technical", "account", "general"]
+    reasoning: str = Field(min_length=1, max_length=240)
+    used_history: bool
+
+
+class RouteResponse(BaseModel):
+    assigned_team: Literal["billing", "technical", "account", "general"]
+    reasoning: str
+    used_history: bool
+    input_tokens: int
+    output_tokens: int
+    prompt_version: str

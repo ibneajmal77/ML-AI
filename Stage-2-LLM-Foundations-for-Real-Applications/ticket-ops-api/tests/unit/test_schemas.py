@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from app.schemas.ticket import TicketExtraction, TicketRequest
+from app.schemas.ticket import RouteDecision, TicketExtraction, TicketRequest
 
 
 def test_ticket_request_rejects_empty_text() -> None:
@@ -27,3 +27,8 @@ def test_ticket_extraction_rejects_non_iso_date() -> None:
             account_id="AC-1001",
             submitted_at="04/16/2026",
         )
+
+
+def test_route_decision_requires_reasoning() -> None:
+    with pytest.raises(ValidationError):
+        RouteDecision(assigned_team="billing", reasoning="", used_history=True)

@@ -102,6 +102,7 @@ Measured from the current prompt artifacts with
 |---|---|---|---|---|---|---|
 | `/classify` | 158 tok | 88 tok | ~300 tok | - | 20 tok | ~566 tok |
 | `/extract` | 179 tok | 125 tok | ~400 tok | - | 300 tok | ~1,004 tok |
+| `/route` | ~220 tok | ~65 tok | ~350 tok | ~120 tok | 220 tok | ~975 tok |
 | `/summarize` | 57 tok | 35 tok | ~500 tok | - | 180 tok | ~772 tok |
 | `/draft` | not measured yet | not measured yet | ~500 tok | - | 400 tok | pending draft endpoint |
 | `/chat` | not in scope for lessons 2.1-2.6 | not in scope for lessons 2.1-2.6 | variable | variable | variable | variable |

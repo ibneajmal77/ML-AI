@@ -7,6 +7,7 @@ from app.prompts.templates import (
     draft_reply_user_message,
     extract_user_message,
     get_template,
+    route_user_message,
 )
 
 
@@ -72,3 +73,9 @@ def test_draft_reply_includes_context_when_provided() -> None:
 def test_draft_reply_excludes_context_block_when_empty() -> None:
     message = draft_reply_user_message("ticket text", "billing", "high", context="")
     assert "Relevant context" not in message
+
+
+def test_route_template_mentions_history_trigger() -> None:
+    message = route_user_message("Account AC-1001 reports the same billing issue again.")
+    assert "history" in message.lower()
+    assert "<ticket>" in message

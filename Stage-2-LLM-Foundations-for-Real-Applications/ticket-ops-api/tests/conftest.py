@@ -9,7 +9,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.services.llm import ChatResult, set_backend
+from app.services.llm import ChatResult, ToolCall, set_backend
 from app.utils.tokens import count_messages_tokens, count_tokens
 
 
@@ -17,7 +17,15 @@ class FakeLLMBackend:
     def __init__(self) -> None:
         self.calls = defaultdict(int)
 
-    def chat(self, messages: list[dict], config) -> ChatResult:
+    def chat(
+        self,
+        messages: list[dict],
+        config,
+        *,
+        response_format: dict | None = None,
+        tools: list[dict] | None = None,
+        tool_choice: str | dict | None = None,
+    ) -> ChatResult:
         system = messages[0]["content"]
         user = messages[-1]["content"]
         normalized = user.lower()
@@ -57,7 +65,62 @@ class FakeLLMBackend:
                 model=config.model or "gpt-4o-mini",
             )
 
+        if "ticket routing system" in system:
+            return self._route(messages, config, tools=tools, response_format=response_format)
+
         raise AssertionError(f"Unexpected prompt family: {system[:80]}")
+
+    def _route(
+        self,
+        messages: list[dict],
+        config,
+        *,
+        tools: list[dict] | None,
+        response_format: dict | None,
+    ) -> ChatResult:
+        model = config.model or "gpt-4o-mini"
+        ticket_text = self._extract_ticket_text(messages[1]["content"])
+        last_message = messages[-1]
+        if last_message["role"] == "tool":
+            history = json.loads(last_message["content"])
+            decision = self._route_decision(ticket_text, history=history)
+            content = json.dumps(decision)
+            return ChatResult(
+                content=content,
+                input_tokens=count_messages_tokens(messages, model),
+                output_tokens=count_tokens(content, model),
+                model=model,
+                finish_reason="stop",
+            )
+
+        account_match = re.search(r"\bAC-\d{4}\b", ticket_text)
+        needs_history = account_match is not None and any(
+            token in ticket_text.lower() for token in ["third", "again", "repeat", "history"]
+        )
+        if tools and needs_history:
+            tool_call = ToolCall(
+                id="tool_call_1",
+                name="get_ticket_history",
+                arguments=json.dumps({"account_id": account_match.group(0)}),
+            )
+            return ChatResult(
+                content="",
+                input_tokens=count_messages_tokens(messages, model),
+                output_tokens=count_tokens(tool_call.arguments, model),
+                model=model,
+                finish_reason="tool_calls",
+                tool_calls=[tool_call],
+            )
+
+        decision = self._route_decision(ticket_text, history=[])
+        content = json.dumps(decision)
+        return ChatResult(
+            content=content,
+            input_tokens=count_messages_tokens(messages, model),
+            output_tokens=count_tokens(content, model),
+            model=model,
+            finish_reason="stop",
+        )
 
     def _extract_ticket_text(self, user_message: str) -> str:
         match = re.search(r"<ticket>\s*(.*?)\s*</ticket>", user_message, re.DOTALL)
@@ -94,6 +157,28 @@ class FakeLLMBackend:
             "urgency": urgency,
             "account_id": account_match.group(0) if account_match else None,
             "submitted_at": date_match.group(0) if date_match else None,
+        }
+
+    def _route_decision(self, text: str, history: list[dict]) -> dict:
+        label = self._classify(text.lower())
+        unresolved_count = sum(1 for item in history if not item.get("resolved", True))
+        used_history = bool(history)
+        reasoning = {
+            "billing": "Billing should handle the payment or invoice issue described in the ticket.",
+            "technical": "Technical support should handle the product issue described in the ticket.",
+            "account": "Account support should handle the access or identity issue described in the ticket.",
+            "general": "General support can triage the request because no specialist signal is present.",
+        }[label]
+        if used_history and unresolved_count:
+            suffix = "" if unresolved_count == 1 else "s"
+            reasoning = (
+                f"{reasoning[:-1]} and account history shows "
+                f"{unresolved_count} unresolved related ticket{suffix}."
+            )
+        return {
+            "assigned_team": label,
+            "reasoning": reasoning,
+            "used_history": used_history,
         }
 
 

@@ -4,7 +4,7 @@ from app.prompts.system import SystemPromptBuilder, get_system_prompt
 
 
 def test_all_task_keys_are_registered() -> None:
-    for task in ["classification", "extraction", "summarization", "draft"]:
+    for task in ["classification", "extraction", "summarization", "routing", "draft"]:
         prompt = get_system_prompt(task)
         assert isinstance(prompt, str)
         assert len(prompt) > 100

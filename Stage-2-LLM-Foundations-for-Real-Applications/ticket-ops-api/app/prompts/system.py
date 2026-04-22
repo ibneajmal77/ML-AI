@@ -98,6 +98,36 @@ SUMMARIZE_SYSTEM_PROMPT = SystemPromptBuilder(
 ).build()
 
 
+ROUTE_SYSTEM_PROMPT = SystemPromptBuilder(
+    role="You are a ticket routing system for an internal operations team.",
+    task=(
+        "Route the ticket to the best team. Use the get_ticket_history tool when "
+        "the routing decision depends on prior unresolved issues or recent account history."
+    ),
+    output_format=(
+        'Return a JSON object with exactly these keys: "assigned_team", "reasoning", '
+        '"used_history".'
+    ),
+    constraints=[
+        "Call get_ticket_history only when account history materially changes the routing decision.",
+        "If no tool is needed, return the routing decision directly as JSON.",
+        "assigned_team must be one of: billing, technical, account, general.",
+        "reasoning must be a single concise sentence grounded in the ticket and any tool result.",
+        "used_history must be true only when a tool result informed the decision.",
+    ],
+    examples=[
+        (
+            "<ticket>Account AC-1001 reports a third invoice dispute this month.</ticket>",
+            '{"assigned_team":"billing","reasoning":"Billing owns repeated invoice disputes and account history confirms recent unresolved billing issues.","used_history":true}',
+        ),
+        (
+            "<ticket>The dashboard crashes when exporting reports.</ticket>",
+            '{"assigned_team":"technical","reasoning":"Technical support should handle application crashes mentioned in the ticket.","used_history":false}',
+        ),
+    ],
+).build()
+
+
 DRAFT_SYSTEM_PROMPT = SystemPromptBuilder(
     role="You are a support reply drafting system for an internal support team.",
     task="Draft a professional customer-facing reply based only on approved ticket context.",
@@ -117,6 +147,8 @@ SYSTEM_PROMPTS = {
     "extract": EXTRACT_SYSTEM_PROMPT,
     "summarization": SUMMARIZE_SYSTEM_PROMPT,
     "summarize": SUMMARIZE_SYSTEM_PROMPT,
+    "routing": ROUTE_SYSTEM_PROMPT,
+    "route": ROUTE_SYSTEM_PROMPT,
     "draft": DRAFT_SYSTEM_PROMPT,
 }
 

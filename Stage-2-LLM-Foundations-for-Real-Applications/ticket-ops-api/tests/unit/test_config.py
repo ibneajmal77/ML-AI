@@ -18,6 +18,11 @@ def test_get_task_config_unknown_raises_key_error() -> None:
         get_task_config("nonexistent_task")
 
 
+def test_get_task_config_routing_is_deterministic() -> None:
+    config = get_task_config("routing")
+    assert config.temperature == 0.0
+
+
 def test_all_task_configs_have_max_tokens_set() -> None:
     for task, config in TASK_CONFIGS.items():
         assert config.max_tokens > 0, f"Task {task!r} has no max_tokens set"

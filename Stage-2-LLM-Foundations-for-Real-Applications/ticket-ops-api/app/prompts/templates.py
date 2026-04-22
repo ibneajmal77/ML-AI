@@ -55,6 +55,19 @@ def summarize_user_message(ticket_text: str) -> str:
 """
 
 
+def route_user_message(ticket_text: str) -> str:
+    return f"""Route the support ticket.
+
+Use ticket history when the account's prior unresolved issues materially affect
+the routing decision. If history is not needed, return the routing decision
+directly.
+
+<ticket>
+{ticket_text}
+</ticket>
+"""
+
+
 def draft_reply_user_message(
     ticket_text: str,
     category: str,
@@ -78,6 +91,7 @@ TEMPLATE_REGISTRY = {
     "classify": classify_user_message,
     "extract": extract_user_message,
     "summarize": summarize_user_message,
+    "route": route_user_message,
     "draft_reply": draft_reply_user_message,
 }
 

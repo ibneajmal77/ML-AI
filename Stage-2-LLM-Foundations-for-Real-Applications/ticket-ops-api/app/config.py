@@ -51,6 +51,11 @@ TASK_CONFIGS: dict[str, LLMConfig] = {
         top_p=0.95,
         max_tokens=400,
     ),
+    "routing": LLMConfig(
+        temperature=0.0,
+        top_p=1.0,
+        max_tokens=220,
+    ),
 }
 
 
