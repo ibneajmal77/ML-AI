@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rag-config
+  namespace: rag-system
+data:
+  APP_ENV: "production"
+  LOG_LEVEL: "INFO"
+  AZURE_OPENAI_DEPLOYMENT: "gpt-4o"
+  AZURE_OPENAI_EMBEDDING_DEPLOYMENT: "text-embedding-3-large"
+  AZURE_OPENAI_API_VERSION: "2024-10-21"
+  LANGFUSE_HOST: "https://cloud.langfuse.com"
+  EMBEDDING_MODEL: "text-embedding-3-large"
+  EMBEDDING_DIMS: "3072"
+  RERANKER_TOP_K: "20"
+  FINAL_TOP_K: "5"
+  CHUNK_SIZE: "512"
+  PARENT_CHUNK_SIZE: "2048"
+  CHUNK_OVERLAP: "50"
+  MAX_CONTEXT_TOKENS: "2000"
+  CACHE_TTL_SECONDS: "3600"
+  RRF_K: "60"

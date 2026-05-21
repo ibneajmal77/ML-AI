@@ -1,0 +1,58 @@
+Incident Response Runbook
+Version 4.1 | Maintained by: Engineering Operations | Last Updated: 2024-01-10
+
+1. PURPOSE AND SCOPE
+
+This runbook defines the end-to-end incident response process for all production
+services. It covers detection, triage, escalation, resolution, and post-incident
+review procedures. All on-call engineers are required to follow this runbook.
+
+2. INCIDENT SEVERITY LEVELS
+
+P1 - Critical: Complete service outage or data loss risk. Response within 15 minutes.
+P2 - High: Major feature degradation affecting more than 20% of users. Response within 1 hour.
+P3 - Medium: Partial degradation, workaround available. Response within 4 hours.
+P4 - Low: Minor issues, no customer impact. Response next business day.
+
+3. INCIDENT RESPONSE WORKFLOW
+
+3.1 Detection and Declaration
+Incidents are detected via automated alerting or customer reports. The on-call engineer
+declares an incident by creating an incident ticket in the incident management system
+and posting in the #incidents Slack channel.
+
+3.2 Standard Change Management Integration
+In normal operations, all infrastructure and configuration changes must go through the
+standard Change Advisory Board (CAB) review process. Changes are submitted at least
+72 hours before the desired deployment window and require CAB approval.
+
+3.3 Emergency Changes During Active Incidents
+During an active incident, emergency changes bypass the standard change advisory board
+(CAB) review but must be retrospectively reviewed within 72 hours. The incident ticket
+must be linked to the emergency change request in the change management system.
+
+The following conditions must be met for an emergency change:
+- An active P1 or P2 incident ticket must be open
+- The change must be directly related to incident mitigation
+- The engineer making the change must notify the incident commander
+- All emergency changes must be documented with rationale and rollback procedure
+
+Post-incident, the CAB must review all emergency changes made during the incident
+window and formally close or remediate any that introduced new risk.
+
+4. ESCALATION PROCEDURES
+
+P1 incidents require immediate escalation to the on-call manager and service owner.
+If the incident is not resolved within 2 hours, escalate to the VP of Engineering.
+Customer-facing P1 incidents require a communication update every 30 minutes.
+
+5. POST-INCIDENT REVIEW
+
+All P1 and P2 incidents require a post-incident review document within 5 business days.
+The review must cover timeline, root cause, contributing factors, and action items.
+Action items must have owners and due dates assigned.
+
+6. INCIDENT COMMUNICATION
+
+Use the incident communication template in Confluence for all external communications.
+All communications must be reviewed by the Customer Success team before sending.

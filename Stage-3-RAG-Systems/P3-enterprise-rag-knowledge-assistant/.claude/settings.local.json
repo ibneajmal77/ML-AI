@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"D:\\\\AI-lessons\\\\ML-AI\\\\Stage-3-RAG-Systems\\\\P3-enterprise-rag-knowledge-assistant\" -Recurse -Force)",
+      "Bash(Select-Object FullName)",
+      "Bash(Sort-Object FullName)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\AI-lessons\\\\ML-AI\\\\Stage-3-RAG-Systems\\\\P3-enterprise-rag-knowledge-assistant\" -Recurse -Force | ForEach-Object { $_.FullName })"
+    ]
+  }
+}

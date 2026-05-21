@@ -1,0 +1,19 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: rag-worker-scaledobject
+  namespace: rag-system
+spec:
+  scaleTargetRef:
+    name: rag-worker
+  minReplicaCount: 0
+  maxReplicaCount: 5
+  triggers:
+    - type: redis
+      metadata:
+        address: rag-redis-host:6380
+        listName: celery
+        listLength: "5"
+        enableTLS: "true"
+      authenticationRef:
+        name: redis-trigger-auth

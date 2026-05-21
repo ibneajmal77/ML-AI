@@ -1,0 +1,52 @@
+Security Access Control Policy
+Classification: RESTRICTED | Version 1.5 | Maintained by: Information Security
+
+1. PURPOSE
+
+This policy defines access control requirements for all classified information systems
+and documents. Compliance is mandatory for all personnel with access to restricted
+or confidential information assets.
+
+2. ACCESS LEVEL DEFINITIONS
+
+Level 0 - Public: No restrictions, freely accessible.
+Level 1 - Internal: Available to all employees on authenticated systems.
+Level 2 - Confidential: Restricted to authorized roles with business need.
+Level 3 - Restricted: Highest classification, requires explicit approval for each access.
+
+3. REQUIREMENTS FOR ACCESSING RESTRICTED FINANCIAL DOCUMENTS
+
+Access to restricted financial documents requires minimum clearance level 3,
+two-factor authentication, and access must be requested through the security portal
+with manager approval. Access requests are reviewed within 24 hours during business
+days and within 48 hours on weekends and holidays.
+
+Additional controls for restricted financial document access:
+- Session recording is mandatory for all restricted document access sessions
+- Downloads are disabled by default; download access requires a separate request
+- Access is logged and reviewed weekly by the Security Operations team
+- Clearance level 3 requires annual background check recertification
+
+3.1 Requesting Clearance Level 3
+Clearance level 3 must be sponsored by a Director-level or above employee.
+The request is reviewed by the Chief Information Security Officer and approved only
+when a documented business need exists. Clearance is granted for a maximum of 12
+months before re-review is required.
+
+4. MULTI-FACTOR AUTHENTICATION REQUIREMENTS
+
+All access to confidential and restricted systems requires MFA using an approved
+authenticator application (Microsoft Authenticator, Google Authenticator, or hardware
+security key). SMS-based MFA is not permitted for Level 2 or Level 3 systems.
+
+5. ACCESS REVIEW
+
+Access to confidential and restricted systems is reviewed quarterly. Users who have
+not accessed a system in 90 days will have their access automatically suspended pending
+re-certification.
+
+6. VIOLATIONS
+
+Unauthorized access to restricted financial documents will result in immediate access
+suspension and investigation under the disciplinary policy. Confirmed violations may
+result in termination and legal action.

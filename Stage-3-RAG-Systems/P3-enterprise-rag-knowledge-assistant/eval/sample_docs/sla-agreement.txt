@@ -1,0 +1,62 @@
+Service Level Agreement
+Enterprise Edition | Version 2.2 | Effective Date: 2024-01-01
+
+1. OVERVIEW
+
+This Service Level Agreement (SLA) defines the uptime commitments, response time
+guarantees, escalation procedures, and compensation structures for enterprise customers.
+This agreement is incorporated by reference into the Master Services Agreement.
+
+2. UPTIME COMMITMENTS
+
+The platform commits to 99.9% monthly uptime for Standard tier customers and 99.95%
+for Premium and Mission Critical tier customers, excluding scheduled maintenance windows.
+Uptime is calculated monthly as: (total minutes - downtime minutes) / total minutes.
+
+3. INCIDENT RESPONSE TIME COMMITMENTS
+
+P1 - Critical: Initial response within 15 minutes, status update every 30 minutes.
+P2 - High: Initial response within 1 hour, status update every 2 hours.
+P3 - Medium: Initial response within 4 hours, next business day resolution target.
+P4 - Low: Response within 2 business days.
+
+4. ESCALATION THRESHOLDS
+
+4.1 Executive Escalation
+Executive escalation is triggered when P1 incidents exceed 4 hours or P2 incidents
+exceed 24 hours. Upon triggering executive escalation, the account VP and customer
+executive sponsor are automatically notified via the escalation management system.
+
+Executive escalation does not replace standard incident response procedures but adds
+a parallel executive communication track and may unlock additional engineering resources.
+
+4.2 Escalation Contacts
+All escalation contacts are maintained in the customer account profile and must be
+reviewed and updated at least quarterly.
+
+5. SERVICE CREDITS AND COMPENSATION
+
+5.1 Credit Calculation
+Compensation starts at 10% service credit for SLA breach and increases to 30% for
+breaches exceeding 3x the SLA threshold. Credits are calculated as a percentage of
+the monthly subscription fee for the affected service.
+
+Specifically:
+- SLA breach (1x threshold): 10% service credit
+- Breach exceeding 2x threshold: 20% service credit
+- Breach exceeding 3x threshold: 30% service credit
+- Breach exceeding 5x threshold: 50% service credit (Mission Critical tier only)
+
+5.2 Credit Request Process
+Service credits must be requested within 30 days of the incident. Credits are applied
+to the next invoice cycle and are not redeemable for cash. Credits cannot exceed the
+total monthly subscription value.
+
+5.3 Exclusions
+SLA commitments do not apply during scheduled maintenance, customer-caused outages,
+force majeure events, or third-party service failures outside the platform's control.
+
+6. REVIEW AND AMENDMENT
+
+This SLA is reviewed annually. Customers will be notified 90 days before any material
+changes to the SLA terms.

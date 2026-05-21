@@ -1,0 +1,67 @@
+HR Records Access Policy
+Classification: CONFIDENTIAL | Version 2.0 | Maintained by: Human Resources & Security
+
+1. PURPOSE
+
+This policy governs access to confidential Human Resources records and personnel files.
+HR records contain sensitive personal information and are subject to strict access
+controls under applicable privacy regulations.
+
+2. SCOPE
+
+This policy applies to all HR records including but not limited to: personnel files,
+performance reviews, disciplinary records, compensation information, benefits data,
+and medical accommodation requests.
+
+3. APPROVAL AUTHORITY
+
+Access to confidential HR records can only be approved by the CHRO or designated
+HR security officers. Requests must be submitted with a business justification and
+are reviewed within 48 hours.
+
+Designated HR security officers are appointed by the CHRO and maintain a current
+list in the HR system. Employees can view the list of designated HR security officers
+through the HR portal.
+
+3.1 Delegation of Approval
+The CHRO may delegate approval authority to designated HR security officers for
+standard access requests. High-sensitivity requests (including executive compensation
+data and disciplinary records involving senior management) require CHRO approval
+and cannot be delegated.
+
+4. REQUEST PROCESS
+
+4.1 Submitting an Access Request
+Access requests must be submitted through the HR portal using the Confidential
+Records Access Request form. Requests must include:
+- Requester name and employee ID
+- Specific records required (name of employee and record type)
+- Business justification for access
+- Duration of access required (temporary vs. ongoing)
+- Manager co-authorization signature
+
+4.2 Review Process
+The CHRO or designated HR security officer reviews the request and business
+justification. Requests are reviewed within 48 hours. Incomplete requests are
+returned to the requester for additional information.
+
+Approved access is provisioned within 4 business hours of approval.
+Denied requests include a written explanation of the denial reason.
+
+5. ACCESS CONTROLS
+
+All access to HR records is logged with full audit trails. Access sessions are
+limited to 60 minutes before requiring re-authentication. Printing HR records
+requires separate approval and is restricted to designated secure print stations.
+
+6. DATA HANDLING
+
+HR records may not be copied, forwarded, or shared with any individual who has not
+been specifically granted access. Records must be viewed only in approved secure
+environments. Remote access to HR records requires VPN and compliant device certification.
+
+7. RETENTION AND DISPOSAL
+
+HR records are retained in accordance with the Data Governance Policy and applicable
+employment law requirements. Access to records scheduled for disposal is restricted
+to the disposal approval period only.

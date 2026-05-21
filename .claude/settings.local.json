@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python append_310_311.py)",
+      "Bash(python append_312_315.py)",
+      "Bash(python append_315_317.py)",
+      "Bash(python append_318_cheatsheet.py)",
+      "Bash(del append_310_311.py append_312_315.py append_315_317.py append_318_cheatsheet.py)"
+    ]
+  }
+}

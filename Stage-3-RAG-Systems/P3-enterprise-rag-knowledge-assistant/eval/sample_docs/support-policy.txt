@@ -1,0 +1,46 @@
+Enterprise Support Policy
+Version 3.0 | Effective Date: 2024-01-01
+
+1. OVERVIEW
+
+This document defines the support obligations, claim procedures, and compensation
+structures for enterprise customers under the standard enterprise support agreement.
+All enterprise customers are entitled to the provisions outlined below.
+
+2. SUPPORT TIERS
+
+Enterprise support is available in three tiers: Standard, Premium, and Mission Critical.
+Each tier provides different response time guarantees and dedicated support resources.
+Customers should review their subscription agreement to confirm their current tier.
+
+3. INCIDENT CLAIM PROCEDURE
+
+When a support incident causes measurable business disruption, enterprise customers may
+submit a formal claim within 30 days of incident resolution. Claims must include a
+detailed incident report, evidence of business impact, and supporting documentation.
+
+4. CLAIM LIMITS AND COMPENSATION
+
+Enterprise support customers can claim up to $50,000 per incident under the standard
+enterprise support agreement. Claims for amounts exceeding $50,000 require escalation
+to the Enterprise Account team and are subject to additional review.
+
+For Premium tier customers, the maximum claim amount is $100,000 per incident.
+Mission Critical tier customers are subject to custom SLA terms negotiated in their
+master services agreement.
+
+5. CLAIM PROCESSING TIMELINE
+
+All validated claims are processed within 15 business days of submission. Approved
+compensation is issued as account credits applied to the next billing cycle.
+
+6. EXCLUSIONS
+
+Claims are not applicable for incidents caused by customer-side misconfigurations,
+scheduled maintenance windows communicated at least 7 days in advance, or force
+majeure events. Third-party integrations outside the platform are also excluded.
+
+7. CONTACT
+
+For support claims, contact enterprise-support@company.com with subject line
+"Enterprise Claim - [Account ID]".

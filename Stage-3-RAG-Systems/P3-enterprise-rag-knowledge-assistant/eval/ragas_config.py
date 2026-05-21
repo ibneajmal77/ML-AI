@@ -1,0 +1,5 @@
+FAITHFULNESS_THRESHOLD = 0.85
+ANSWER_RELEVANCE_THRESHOLD = 0.80
+CONTEXT_PRECISION_THRESHOLD = 0.75
+
+METRICS_TO_RUN = ["faithfulness", "answer_relevancy", "context_precision"]

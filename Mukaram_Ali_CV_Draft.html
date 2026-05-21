@@ -1,0 +1,352 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mukaram Ali - CV</title>
+  <style>
+    :root {
+      --bg: #f5f1e8;
+      --paper: #fffdf8;
+      --ink: #182028;
+      --muted: #5b6773;
+      --accent: #0f6b5a;
+      --line: #d8d0c2;
+      --chip: #edf6f3;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at top right, rgba(15, 107, 90, 0.08), transparent 28%),
+        linear-gradient(180deg, #f8f4ec 0%, #f2ede3 100%);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 32px auto;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 50px rgba(24, 32, 40, 0.08);
+      padding: 40px 48px;
+    }
+
+    header {
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 18px;
+      margin-bottom: 26px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      letter-spacing: 0.04em;
+    }
+
+    .headline {
+      margin-top: 8px;
+      color: var(--accent);
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .contact {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .contact span {
+      display: inline-block;
+      margin-right: 16px;
+      margin-bottom: 6px;
+    }
+
+    h2 {
+      margin: 28px 0 12px;
+      font-size: 1rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    p {
+      margin: 0 0 10px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .chip {
+      padding: 6px 10px;
+      background: var(--chip);
+      border: 1px solid #d7e9e4;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: #21463f;
+    }
+
+    .role {
+      margin-bottom: 22px;
+    }
+
+    .role-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+
+    .role-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+    }
+
+    .role-meta {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .org {
+      margin-top: 4px;
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    ul {
+      margin: 10px 0 0 20px;
+      padding: 0;
+    }
+
+    li {
+      margin: 7px 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 28px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      padding: 14px 16px;
+      background: #fffaf2;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 0.98rem;
+      color: #28333d;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .page {
+        margin: 0;
+        box-shadow: none;
+        border: none;
+        max-width: none;
+        padding: 20px 28px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        margin: 0;
+        padding: 24px 20px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>MUKARAM ALI</h1>
+      <div class="headline">Full Stack Engineer | Software Engineer | AI/ML Engineer</div>
+      <div class="contact">
+        <span>Dubai, United Arab Emirates</span>
+        <span>+971585071527</span>
+        <span>mukaram.hun@gmail.com</span>
+        <span>LinkedIn: linkedin.com/in/mukaram-ali-b807831ba</span>
+        <span>GitHub: github.com/mukaram123</span>
+      </div>
+    </header>
+
+    <section>
+      <h2>Professional Summary</h2>
+      <p>Full Stack Engineer with experience building modern web applications and AI-enabled solutions using Python, React, Angular, FastAPI, Django, SQL, MongoDB, Git, Docker, and Microsoft Azure. Strong foundation across frontend, backend, database, and API development, with growing specialization in applied AI/ML, intelligent automation, prompt-driven applications, and cloud-based solution delivery.</p>
+      <p>Comfortable working across the full software lifecycle, from UI development and backend architecture to deployment, integration, debugging, and production support. Positioned for Software Engineer, Full Stack Developer, and AI/ML Engineer opportunities with a practical focus on scalable web platforms and business-facing AI features.</p>
+    </section>
+
+    <section>
+      <h2>Core Competencies</h2>
+      <div class="chips">
+        <span class="chip">Python</span>
+        <span class="chip">FastAPI</span>
+        <span class="chip">Django</span>
+        <span class="chip">Flask</span>
+        <span class="chip">React.js</span>
+        <span class="chip">Next.js</span>
+        <span class="chip">Angular</span>
+        <span class="chip">TypeScript</span>
+        <span class="chip">JavaScript</span>
+        <span class="chip">HTML5</span>
+        <span class="chip">CSS3</span>
+        <span class="chip">Bootstrap</span>
+        <span class="chip">Tailwind CSS</span>
+        <span class="chip">Full Stack Development</span>
+        <span class="chip">Web Application Development</span>
+        <span class="chip">Frontend Engineering</span>
+        <span class="chip">Responsive UI Development</span>
+        <span class="chip">Component-Based Architecture</span>
+        <span class="chip">Axure RP</span>
+        <span class="chip">REST APIs</span>
+        <span class="chip">API Integration</span>
+        <span class="chip">JSON</span>
+        <span class="chip">Authentication</span>
+        <span class="chip">OAuth 2.0</span>
+        <span class="chip">JWT</span>
+        <span class="chip">SQL</span>
+        <span class="chip">PostgreSQL</span>
+        <span class="chip">MySQL</span>
+        <span class="chip">MongoDB</span>
+        <span class="chip">SQLite</span>
+        <span class="chip">Structured and Semi-Structured Data Management</span>
+        <span class="chip">Azure Cloud</span>
+        <span class="chip">Azure App Services</span>
+        <span class="chip">Azure Storage</span>
+        <span class="chip">Azure OpenAI</span>
+        <span class="chip">Azure Machine Learning</span>
+        <span class="chip">OpenAI API</span>
+        <span class="chip">AI/ML Integration</span>
+        <span class="chip">Generative AI</span>
+        <span class="chip">LLM Integration</span>
+        <span class="chip">Prompt Engineering</span>
+        <span class="chip">LangChain</span>
+        <span class="chip">LlamaIndex</span>
+        <span class="chip">RAG Pipelines</span>
+        <span class="chip">Vector Databases</span>
+        <span class="chip">pgvector</span>
+        <span class="chip">Scikit-learn</span>
+        <span class="chip">Pandas</span>
+        <span class="chip">NumPy</span>
+        <span class="chip">Jupyter Notebook</span>
+        <span class="chip">Data Preprocessing</span>
+        <span class="chip">Model Evaluation</span>
+        <span class="chip">Classification</span>
+        <span class="chip">Regression</span>
+        <span class="chip">Intelligent Automation</span>
+        <span class="chip">Docker</span>
+        <span class="chip">Git</span>
+        <span class="chip">GitHub</span>
+        <span class="chip">Postman</span>
+        <span class="chip">Pydantic</span>
+        <span class="chip">CI/CD</span>
+        <span class="chip">Agile</span>
+        <span class="chip">Testing</span>
+        <span class="chip">Debugging</span>
+        <span class="chip">Cloud Deployment</span>
+        <span class="chip">Deployment Support</span>
+        <span class="chip">Environment Configuration</span>
+        <span class="chip">AI-Powered Applications</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Work Experience</h2>
+      <div class="role">
+        <div class="role-head">
+          <div class="role-title">Full Stack Engineer / AI/ML Engineer</div>
+          <div class="role-meta">March 2024 - Present</div>
+        </div>
+        <div class="org">Merik Solutions</div>
+        <ul>
+          <li>Build and maintain full stack web applications using <strong>Python</strong>, <strong>React.js</strong>, and <strong>Angular</strong>, delivering responsive user experiences backed by scalable APIs and data-driven business workflows.</li>
+          <li>Develop backend services with <strong>FastAPI</strong> and <strong>Django</strong>, implementing modular application logic, API endpoints, authentication flows, validation layers, and integration patterns for frontend and third-party systems.</li>
+          <li>Design and integrate <strong>RESTful APIs</strong> for web and platform features, enabling smooth communication between frontend modules, backend services, databases, and cloud-hosted components.</li>
+          <li>Work with <strong>SQL</strong> and <strong>MongoDB</strong> to support transactional workflows, application data management, reporting needs, and flexible storage requirements across structured and semi-structured data.</li>
+          <li>Contribute to <strong>Azure-based</strong> application development and deployment workflows, supporting cloud-hosted services, environment configuration, and application delivery for scalable business systems.</li>
+          <li>Participate in AI/ML-focused solution development by integrating intelligent features into web applications, including automation-oriented flows, prompt-based interactions, document-oriented processing, and data-backed decision support features using tools and libraries such as <strong>OpenAI-style APIs</strong>, <strong>Azure OpenAI concepts</strong>, <strong>LangChain</strong>, and <strong>Python-based ML workflows</strong>.</li>
+          <li>Support practical AI engineering use cases such as chatbot and API integration, document understanding workflows, classification-style business logic, retrieval-based knowledge experiences, and workflow automation where software and AI services intersect.</li>
+          <li>Collaborate with cross-functional teams to translate business requirements into implementable product features, balancing usability, maintainability, delivery speed, and technical quality.</li>
+        </ul>
+      </div>
+    </section>
+<section>
+      <h2>Projects</h2>
+      <div class="role">
+        <div class="role-head">
+          <div class="role-title">AI-Powered Knowledge Assistant</div>
+        </div>
+        <ul>
+          <li>Designed an AI-enabled web application that allows users to query business knowledge through a conversational interface backed by structured backend services and retrieval-oriented response generation patterns.</li>
+          <li>Built backend APIs with <strong>FastAPI</strong> to manage user queries, prompt orchestration, response formatting, and integration with LLM-style service flows.</li>
+          <li>Developed a responsive frontend in <strong>React.js</strong> for user interaction, result presentation, and streamlined knowledge access across web workflows.</li>
+          <li>Used <strong>LangChain-style orchestration patterns</strong> and prompt engineering techniques to structure interactions, improve answer relevance, and support practical AI-assisted user experiences.</li>
+          <li>Applied database-backed storage and query handling using <strong>SQL</strong> for content organization, request tracking, and maintainable application flow.</li>
+          <li>Containerized the application with <strong>Docker</strong> to support local consistency, environment portability, and deployment-readiness.</li>
+        </ul>
+      </div>
+
+      <div class="role">
+        <div class="role-head">
+          <div class="role-title">Cloud-Based Business Management Platform</div>
+        </div>
+        <ul>
+          <li>Built a full stack web platform for managing business workflows, user operations, and data-driven modules through a modern frontend and scalable backend architecture.</li>
+          <li>Implemented backend services with <strong>Django</strong> and REST APIs to support business logic, authentication flows, CRUD operations, and integration across application modules.</li>
+          <li>Developed interactive user interfaces using <strong>Angular</strong>, enabling responsive dashboards, form-based workflows, and efficient client-side interaction with backend services.</li>
+          <li>Worked with <strong>MongoDB</strong> for flexible application data handling and feature support across dynamic and semi-structured business records.</li>
+          <li>Supported deployment-oriented workflows on <strong>Microsoft Azure</strong>, aligning application delivery with cloud-hosted service patterns and scalable web application needs.</li>
+          <li>Used <strong>Git</strong> for source control, collaboration, iterative delivery, and feature maintenance across the development lifecycle.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Education</h2>
+      <div class="role">
+        <div class="role-head">
+          <div class="role-title">Bachelor's in Computer Science</div>
+          <div class="role-meta">Oct 2023</div>
+        </div>
+        <div class="org">Univeristy of the Punjab (Gujranwala Campus) | Pakistan</div>
+      </div>
+    </section>`r`n</main>
+</body>
+</html>
+

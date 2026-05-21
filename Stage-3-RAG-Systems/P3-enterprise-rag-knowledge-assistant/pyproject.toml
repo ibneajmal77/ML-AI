@@ -1,0 +1,57 @@
+[project]
+name = "enterprise-rag-knowledge-assistant"
+version = "1.0.0"
+requires-python = ">=3.11"
+
+dependencies = [
+    # API
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "python-multipart>=0.0.18",
+    # Config + validation
+    "pydantic>=2.9.0",
+    "pydantic-settings>=2.6.0",
+    # Database
+    "asyncpg>=0.30.0",
+    "pgvector>=0.3.5",
+    # LLM + embeddings
+    "openai>=1.56.0",
+    "tiktoken>=0.8.0",
+    # Retrieval
+    "cohere>=5.11.0",
+    "rank-bm25>=0.2.2",
+    "sentence-transformers>=3.3.0",
+    # Document ingestion
+    "unstructured[all-docs]>=0.16.0",
+    # Context compression
+    "llmlingua>=0.2.2",
+    # Caching + workers
+    "redis>=5.2.0",
+    "celery[redis]>=5.4.0",
+    # Tracing
+    "langfuse>=2.53.0",
+    # HTTP + resilience
+    "httpx>=0.28.0",
+    "tenacity>=9.0.0",
+    # Azure Document Intelligence
+    "azure-ai-formrecognizer>=3.3.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-mock>=3.14.0",
+    "ruff>=0.8.0",
+    "ragas>=0.2.5",
+    "datasets>=2.21.0",
+    "debugpy>=1.8.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I"]

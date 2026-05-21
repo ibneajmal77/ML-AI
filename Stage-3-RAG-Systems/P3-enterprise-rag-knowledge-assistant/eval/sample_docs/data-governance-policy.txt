@@ -1,0 +1,52 @@
+Data Governance and Retention Policy
+Version 2.4 | Effective Date: 2024-03-15
+
+1. PURPOSE
+
+This policy establishes the standards for data classification, retention, storage
+security, and disposal across all company systems. Compliance with this policy is
+mandatory for all employees, contractors, and third-party processors.
+
+2. DATA CLASSIFICATION
+
+Data is classified into four categories: Public, Internal, Confidential, and Restricted.
+Classification determines applicable retention periods, storage requirements, and
+access controls. Data owners are responsible for correctly classifying data at creation.
+
+3. RETENTION REQUIREMENTS
+
+3.1 Customer Records
+Customer records must be retained for a minimum of 7 years in accordance with
+regulatory requirements. All customer records must be stored in encrypted format
+using AES-256 or equivalent encryption standard approved by the security team.
+Records exceeding the 7-year retention period must be securely disposed of using
+NIST SP 800-88 compliant media sanitization procedures.
+
+3.2 Financial Records
+Financial records including invoices, contracts, and payment histories must be
+retained for 10 years to satisfy tax authority requirements in all operating regions.
+
+3.3 Employee Records
+Employee records are retained for the duration of employment plus 7 years.
+Payroll records are subject to statutory retention periods by jurisdiction.
+
+3.4 Operational Logs
+System access logs and audit trails must be retained for 2 years.
+Security incident logs must be retained for 5 years.
+
+4. STORAGE SECURITY
+
+All retained data must be stored with encryption at rest and in transit. Encryption
+keys must be managed through the approved key management service. Backup copies
+must meet the same encryption standards as primary storage.
+
+5. DISPOSAL
+
+Data disposal must be documented and approved by the data owner and the data
+protection team. Physical media must be physically destroyed. Digital records
+must be securely wiped with verification.
+
+6. POLICY VIOLATIONS
+
+Violations of this policy may result in disciplinary action up to and including
+termination. Regulatory violations may also result in civil or criminal penalties.

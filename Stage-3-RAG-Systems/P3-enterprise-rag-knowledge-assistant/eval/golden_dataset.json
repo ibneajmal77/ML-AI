@@ -1,0 +1,64 @@
+[
+  {
+    "question": "What is the maximum claim amount under the enterprise support policy?",
+    "ground_truth": "Enterprise support customers can claim up to $50,000 per incident under the standard enterprise support agreement.",
+    "relevant_document": "support-policy-v3.pdf",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What are the data retention requirements for customer records?",
+    "ground_truth": "Customer records must be retained for a minimum of 7 years in accordance with regulatory requirements, stored in encrypted format.",
+    "relevant_document": "data-governance-policy.pdf",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the approved vendor list for cloud storage solutions?",
+    "ground_truth": "Approved cloud storage vendors include AWS S3, Azure Blob Storage, and Google Cloud Storage. All other vendors require security review.",
+    "relevant_document": "vendor-approval-list.pdf",
+    "difficulty": "easy"
+  },
+  {
+    "question": "How does the incident response process integrate with the change management workflow?",
+    "ground_truth": "During an active incident, emergency changes bypass the standard change advisory board (CAB) review but must be retrospectively reviewed within 72 hours. The incident ticket must be linked to the emergency change request.",
+    "relevant_document": "incident-response-runbook.pdf",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What are the SLA thresholds that trigger executive escalation and what is the compensation structure?",
+    "ground_truth": "Executive escalation is triggered when P1 incidents exceed 4 hours or P2 incidents exceed 24 hours. Compensation starts at 10% service credit for SLA breach and increases to 30% for breaches exceeding 3x the SLA threshold.",
+    "relevant_document": "sla-agreement.pdf",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is our policy on cryptocurrency payments?",
+    "ground_truth": "I could not find this information in the available documents.",
+    "relevant_document": null,
+    "difficulty": "negative"
+  },
+  {
+    "question": "What are the gym membership reimbursement limits?",
+    "ground_truth": "I could not find this information in the available documents.",
+    "relevant_document": null,
+    "difficulty": "negative"
+  },
+  {
+    "question": "What is the quarterly revenue target for EMEA region?",
+    "ground_truth": "I could not find this information in the available documents.",
+    "relevant_document": null,
+    "difficulty": "negative"
+  },
+  {
+    "question": "What are the security requirements for accessing restricted financial documents?",
+    "ground_truth": "Access to restricted financial documents requires minimum clearance level 3, two-factor authentication, and access must be requested through the security portal with manager approval.",
+    "relevant_document": "security-access-policy.pdf",
+    "difficulty": "medium",
+    "access_level": 3
+  },
+  {
+    "question": "Who can approve access to confidential HR records?",
+    "ground_truth": "Access to confidential HR records can only be approved by the CHRO or designated HR security officers. Requests must be submitted with a business justification and are reviewed within 48 hours.",
+    "relevant_document": "hr-access-policy.pdf",
+    "difficulty": "medium",
+    "access_level": 2
+  }
+]

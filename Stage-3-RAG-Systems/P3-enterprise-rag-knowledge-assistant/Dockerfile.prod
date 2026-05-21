@@ -1,0 +1,34 @@
+# ── Stage 1: builder ──────────────────────────────────────────────────────────
+FROM python:3.11-slim AS builder
+
+WORKDIR /build
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY pyproject.toml .
+RUN pip install --no-cache-dir --prefix=/install -e .
+
+# ── Stage 2: runtime ──────────────────────────────────────────────────────────
+FROM python:3.11-slim AS runtime
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libmagic1 poppler-utils tesseract-ocr \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+COPY --from=builder /install /usr/local
+
+RUN useradd --create-home --shell /bin/bash appuser
+USER appuser
+
+COPY --chown=appuser:appuser src/ src/
+COPY --chown=appuser:appuser migrations/ migrations/
+
+EXPOSE 8000
+
+ENTRYPOINT ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000", \
+            "--workers", "2", "--loop", "uvloop", "--http", "httptools"]

@@ -1,0 +1,40 @@
+name: Build and Push to ACR
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Log in to ACR
+        run: az acr login --name ${{ vars.ACR_NAME }}
+
+      - name: Build and push
+        run: |
+          IMAGE_TAG="${{ vars.ACR_LOGIN_SERVER }}/rag-api:${{ github.sha }}"
+          docker build -f Dockerfile.prod -t $IMAGE_TAG .
+          docker push $IMAGE_TAG
+          docker tag $IMAGE_TAG "${{ vars.ACR_LOGIN_SERVER }}/rag-api:latest"
+          docker push "${{ vars.ACR_LOGIN_SERVER }}/rag-api:latest"
+
+      - name: Save image tag
+        id: image
+        run: echo "tag=${{ github.sha }}" >> $GITHUB_OUTPUT
+
+    outputs:
+      image_tag: ${{ steps.image.outputs.tag }}

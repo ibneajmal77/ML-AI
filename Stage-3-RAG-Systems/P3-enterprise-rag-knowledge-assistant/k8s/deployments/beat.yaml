@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rag-beat
+  namespace: rag-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rag-beat
+  strategy:
+    type: Recreate  # NOT RollingUpdate — two beat processes = duplicate scheduled jobs
+  template:
+    metadata:
+      labels:
+        app: rag-beat
+    spec:
+      containers:
+        - name: rag-beat
+          image: ragkbregistry.azurecr.io/rag-api:IMAGE_TAG
+          command: ["celery"]
+          args: ["-A", "src.indexing.worker", "beat", "--loglevel=info"]
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          envFrom:
+            - configMapRef:
+                name: rag-config
+            - secretRef:
+                name: rag-secrets
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

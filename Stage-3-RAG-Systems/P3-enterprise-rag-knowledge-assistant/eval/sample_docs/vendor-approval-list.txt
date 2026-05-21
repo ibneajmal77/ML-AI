@@ -1,0 +1,48 @@
+Approved Technology Vendor List
+Version 1.8 | Maintained by: Procurement & Security | Last Updated: 2024-02-01
+
+1. PURPOSE
+
+This document lists all technology vendors that have been reviewed and approved
+by the Security Review Board. Using non-approved vendors for production workloads
+requires a formal security review request submitted via the vendor portal.
+
+2. CLOUD INFRASTRUCTURE
+
+2.1 Compute and Hosting
+Approved providers: Microsoft Azure, Amazon Web Services (AWS), Google Cloud Platform (GCP).
+All compute workloads must use private networking where technically feasible.
+
+2.2 Cloud Storage Solutions
+Approved cloud storage vendors include AWS S3, Azure Blob Storage, and Google Cloud Storage.
+All other vendors require security review before use in any environment containing
+internal or higher classification data. Storage buckets must have public access
+disabled by default and must use server-side encryption with managed keys.
+
+Object lifecycle policies must be configured to align with the data retention policy.
+Cross-region replication is permitted only within the approved cloud providers listed above.
+
+3. DATABASES
+
+Approved database services: Azure Database for PostgreSQL, Amazon RDS, Cloud SQL.
+In-memory stores: Azure Cache for Redis, Amazon ElastiCache (Redis engine).
+All database instances must use TLS for connections and have automated backups enabled.
+
+4. IDENTITY AND ACCESS MANAGEMENT
+
+Single Sign-On: Azure Active Directory (primary), Okta (approved for specific use cases).
+Multi-factor authentication must be enforced for all admin access.
+
+5. MONITORING AND OBSERVABILITY
+
+Approved APM and monitoring: Azure Monitor, Datadog, Grafana Cloud.
+Log aggregation: Azure Log Analytics, Splunk (existing enterprise license only).
+
+6. ADDING NEW VENDORS
+
+To request approval for a new vendor, submit a vendor security questionnaire via
+the procurement portal. The Security Review Board meets bi-weekly to evaluate
+new vendor requests. Standard review timeline is 15 business days.
+
+Emergency approvals for critical business needs can be requested with VP-level
+sponsorship but must be retroactively reviewed within 30 days.
